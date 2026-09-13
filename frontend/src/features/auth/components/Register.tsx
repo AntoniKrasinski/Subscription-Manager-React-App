@@ -1,33 +1,45 @@
-import React,{useState} from 'react'
-import { Link } from 'react-router';
-
-interface UserData {
-  email: string;
-  password: string;
-}
+import React, { useState } from "react";
+import { Link } from "react-router";
+import { useRegister } from "../../../lib/auth";
+import type { RegisterInput } from "../../../lib/auth";
 
 const Register = () => {
-const [userData, setUserData] = useState<UserData>({
+  const [userData, setUserData] = useState<RegisterInput>({
+    name: "",
     email: "",
     password: "",
+  });
+
+  const registering = useRegister({
+    onSuccess: () => {},
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log(userData);
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    registering.mutate(userData);
   };
   return (
     <div>
       <form onSubmit={handleSubmit} className="flex flex-col">
+        <label htmlFor="name">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="name"
+          value={userData.name}
+          onChange={handleChange}
+          required
+        />
         <label htmlFor="email">Email</label>
         <input
           id="email"
           name="email"
           type="email"
+          value={userData.email}
           onChange={handleChange}
           required
         />
@@ -36,13 +48,15 @@ const [userData, setUserData] = useState<UserData>({
           id="password"
           name="password"
           type="password"
+          value={userData.password}
           onChange={handleChange}
           required
         />
         <button type="submit">Submit</button>
       </form>
       <Link to="/login">Login</Link>
-    </div>)
-}
+    </div>
+  );
+};
 
-export default Register
+export default Register;

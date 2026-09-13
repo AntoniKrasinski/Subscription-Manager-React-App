@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
-
-interface UserData {
-  email: string;
-  password: string;
-}
+import { useLogin } from "../../../lib/auth";
+import type { LoginInput } from "../../../lib/auth";
 
 const Login = () => {
-  const [userData, setUserData] = useState<UserData>({
+  const [userData, setUserData] = useState<LoginInput>({
     email: "",
     password: "",
   });
+
+  const logining = useLogin({ onSuccess: () => {} });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,12 +17,8 @@ const Login = () => {
   };
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = await loginUser(userData);
-    if (!user) {
-      console.log("get out");
-    } else {
-      console.log("you are velcome");
-    }
+
+    logining.mutate(userData);
   };
   return (
     <div>
