@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { useRegister } from "../../../lib/auth";
 import type { RegisterInput } from "../../../lib/auth";
 
+
 const Register = () => {
   const [userData, setUserData] = useState<RegisterInput>({
     name: "",
@@ -52,7 +53,9 @@ const Register = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">Submit</button>
+        <button className="border" type="submit">
+          Submit
+        </button>
       </form>
       <Link to="/login">Login</Link>
     </div>

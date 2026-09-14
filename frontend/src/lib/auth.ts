@@ -1,4 +1,5 @@
 //ToDo: export validation with zod and implement in forms
+import toast from "react-hot-toast";
 import type { AuthResponse } from "../types/api";
 import { api } from "./apiClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +13,9 @@ export const useRegister = ({ onSuccess }: { onSuccess?: () => void }) => {
     onSuccess: (data) => {
       queryClient.setQueryData(userQueryKey, data.user);
       onSuccess?.();
+    },
+    onError: () => {
+      toast.error("error");
     },
   });
 };
@@ -27,7 +31,7 @@ export const useLogin = ({ onSuccess }: { onSuccess?: () => void }) => {
   });
 };
 
-const registerURL = "/register";
+const registerURL = "auth/register";
 export type RegisterInput = { name: string; email: string; password: string };
 
 const registerWithEmailAndPassword = async (
@@ -41,7 +45,7 @@ const registerWithEmailAndPassword = async (
   return response.data;
 };
 
-const loginURL = "/login";
+const loginURL = "auth/login";
 export type LoginInput = { email: string; password: string };
 
 const loginWithEmailAndPassword = async (

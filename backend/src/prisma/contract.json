@@ -4,22 +4,85 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "Post": {
-      "model": "Post",
+    "RefreshToken": {
+      "model": "RefreshToken",
+      "namespace": "public"
+    },
+    "Subscription": {
+      "model": "Subscription",
       "namespace": "public"
     },
     "User": {
       "model": "User",
+      "namespace": "public"
+    },
+    "UserPreferences": {
+      "model": "UserPreferences",
       "namespace": "public"
     }
   },
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "Currency": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PLN",
+                "value": "pln"
+              },
+              {
+                "name": "USD",
+                "value": "usd"
+              }
+            ]
+          },
+          "Language": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PL",
+                "value": "pl"
+              },
+              {
+                "name": "EN",
+                "value": "en"
+              }
+            ]
+          },
+          "Theme": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "LIGHT",
+                "value": "light"
+              },
+              {
+                "name": "DARK",
+                "value": "dark"
+              }
+            ]
+          }
+        },
         "models": {
-          "Post": {
+          "RefreshToken": {
             "fields": {
-              "authorId": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "expiresAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamp-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
                 "nullable": false,
                 "type": {
                   "codecId": "sql/char@1",
@@ -29,8 +92,95 @@
                   }
                 }
               },
-              "content": {
+              "revokedAt": {
                 "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamp-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "tokenHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "expiresAt": {
+                  "column": "expiresAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "revokedAt": {
+                  "column": "revokedAt"
+                },
+                "tokenHash": {
+                  "column": "tokenHash"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "RefreshToken"
+            }
+          },
+          "Subscription": {
+            "fields": {
+              "billingCycle": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "category": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -43,6 +193,26 @@
                   "kind": "scalar"
                 }
               },
+              "curency": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Currency",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "description": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -51,6 +221,20 @@
                   "typeParams": {
                     "length": 36
                   }
+                }
+              },
+              "isActive": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "price": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
                 }
               },
               "title": {
@@ -66,15 +250,25 @@
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
               }
             },
             "relations": {
-              "author": {
+              "user": {
                 "cardinality": "N:1",
                 "nullable": false,
                 "on": {
                   "localFields": [
-                    "authorId"
+                    "userId"
                   ],
                   "targetFields": [
                     "id"
@@ -88,27 +282,42 @@
             },
             "storage": {
               "fields": {
-                "authorId": {
-                  "column": "authorId"
+                "billingCycle": {
+                  "column": "billingCycle"
                 },
-                "content": {
-                  "column": "content"
+                "category": {
+                  "column": "category"
                 },
                 "createdAt": {
                   "column": "createdAt"
                 },
+                "curency": {
+                  "column": "curency"
+                },
+                "description": {
+                  "column": "description"
+                },
                 "id": {
                   "column": "id"
+                },
+                "isActive": {
+                  "column": "isActive"
+                },
+                "price": {
+                  "column": "price"
                 },
                 "title": {
                   "column": "title"
                 },
                 "updatedAt": {
                   "column": "updatedAt"
+                },
+                "userId": {
+                  "column": "userId"
                 }
               },
               "namespaceId": "public",
-              "table": "Post"
+              "table": "Subscription"
             }
           },
           "User": {
@@ -138,7 +347,14 @@
                 }
               },
               "name": {
-                "nullable": true,
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "passwordHash": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -150,28 +366,52 @@
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
-              },
-              "username": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
               }
             },
             "relations": {
-              "posts": {
+              "preferences": {
+                "cardinality": "1:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "UserPreferences",
+                  "namespace": "public"
+                }
+              },
+              "refreshTokens": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "authorId"
+                    "userId"
                   ]
                 },
                 "to": {
-                  "model": "Post",
+                  "model": "RefreshToken",
+                  "namespace": "public"
+                }
+              },
+              "subscriptions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "Subscription",
                   "namespace": "public"
                 }
               }
@@ -190,15 +430,167 @@
                 "name": {
                   "column": "name"
                 },
+                "passwordHash": {
+                  "column": "passwordHash"
+                },
                 "updatedAt": {
                   "column": "updatedAt"
-                },
-                "username": {
-                  "column": "username"
                 }
               },
               "namespaceId": "public",
               "table": "User"
+            }
+          },
+          "UserPreferences": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "curency": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Currency",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "language": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Language",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "monthlyBudget": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "reminders": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "theme": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Theme",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "timezone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "curency": {
+                  "column": "curency"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "language": {
+                  "column": "language"
+                },
+                "monthlyBudget": {
+                  "column": "monthlyBudget"
+                },
+                "reminders": {
+                  "column": "reminders"
+                },
+                "theme": {
+                  "column": "theme"
+                },
+                "timezone": {
+                  "column": "timezone"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "UserPreferences"
             }
           }
         }
@@ -210,21 +602,8 @@
       "public": {
         "entries": {
           "table": {
-            "Post": {
+            "RefreshToken": {
               "columns": {
-                "authorId": {
-                  "codecId": "sql/char@1",
-                  "nativeType": "character",
-                  "nullable": false,
-                  "typeParams": {
-                    "length": 36
-                  }
-                },
-                "content": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
-                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
@@ -232,6 +611,11 @@
                     "kind": "function"
                   },
                   "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "expiresAt": {
+                  "codecId": "pg/timestamp-temporal@1",
+                  "nativeType": "timestamp",
                   "nullable": false
                 },
                 "id": {
@@ -242,6 +626,107 @@
                     "length": 36
                   }
                 },
+                "revokedAt": {
+                  "codecId": "pg/timestamp-temporal@1",
+                  "nativeType": "timestamp",
+                  "nullable": true
+                },
+                "tokenHash": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "tokenHash"
+                  ]
+                }
+              ]
+            },
+            "Subscription": {
+              "checks": [
+                {
+                  "expression": "\"curency\" IN ('pln', 'usd')",
+                  "name": "Subscription_curency_check_f9dd20e4",
+                  "prefix": "Subscription_curency_check"
+                }
+              ],
+              "columns": {
+                "billingCycle": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "category": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "curency": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Currency",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "description": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "isActive": {
+                  "codecId": "pg/bool@1",
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "price": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": false
+                },
                 "title": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -251,6 +736,14 @@
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
+                },
+                "userId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
                 }
               },
               "foreignKeys": [],
@@ -289,17 +782,17 @@
                 "name": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": false
+                },
+                "passwordHash": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
-                },
-                "username": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
                 }
               },
               "foreignKeys": [],
@@ -316,6 +809,144 @@
                   ]
                 }
               ]
+            },
+            "UserPreferences": {
+              "checks": [
+                {
+                  "expression": "\"curency\" IN ('pln', 'usd')",
+                  "name": "UserPreferences_curency_check_f9dd20e4",
+                  "prefix": "UserPreferences_curency_check"
+                },
+                {
+                  "expression": "\"language\" IN ('pl', 'en')",
+                  "name": "UserPreferences_language_check_a3491bd7",
+                  "prefix": "UserPreferences_language_check"
+                },
+                {
+                  "expression": "\"theme\" IN ('light', 'dark')",
+                  "name": "UserPreferences_theme_check_753234b6",
+                  "prefix": "UserPreferences_theme_check"
+                }
+              ],
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "curency": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Currency",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "id": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "language": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "en"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Language",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "monthlyBudget": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": true
+                },
+                "reminders": {
+                  "codecId": "pg/bool@1",
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "theme": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "light"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Theme",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "timezone": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            }
+          },
+          "valueSet": {
+            "Currency": {
+              "kind": "valueSet",
+              "values": [
+                "pln",
+                "usd"
+              ]
+            },
+            "Language": {
+              "kind": "valueSet",
+              "values": [
+                "pl",
+                "en"
+              ]
+            },
+            "Theme": {
+              "kind": "valueSet",
+              "values": [
+                "light",
+                "dark"
+              ]
             }
           }
         },
@@ -323,10 +954,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "bd6cd4febdccf911cbc0230a0ee66d1eeb16a0f11a9a95931dbe32fc35a3feeb"
+    "storageHash": "03e28c9b5caa0f36e67de191c1495e8d61160d6f36b1f2cd264be1597f69ee94"
   },
   "execution": {
-    "executionHash": "fded2d39ac902307abfa1d94180d6742a85b04ee38d7795237e17f66b04315ae",
+    "executionHash": "d1f0280373453c2756b086e474b677c6dfc491c8c6b3a65c4d5bb1b2e77c6889",
     "mutations": {
       "defaults": [
         {
@@ -337,7 +968,7 @@
           "ref": {
             "column": "id",
             "namespace": "public",
-            "table": "Post"
+            "table": "RefreshToken"
           }
         },
         {
@@ -352,7 +983,33 @@
           "ref": {
             "column": "updatedAt",
             "namespace": "public",
-            "table": "Post"
+            "table": "RefreshToken"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "Subscription"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "Subscription"
           }
         },
         {
@@ -379,6 +1036,32 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "User"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "UserPreferences"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "UserPreferences"
           }
         }
       ]
