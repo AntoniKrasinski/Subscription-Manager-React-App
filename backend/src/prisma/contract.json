@@ -4,19 +4,19 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "RefreshToken": {
+    "refreshToken": {
       "model": "RefreshToken",
       "namespace": "public"
     },
-    "Subscription": {
+    "subscription": {
       "model": "Subscription",
       "namespace": "public"
     },
-    "User": {
+    "user": {
       "model": "User",
       "namespace": "public"
     },
-    "UserPreferences": {
+    "userPreferences": {
       "model": "UserPreferences",
       "namespace": "public"
     }
@@ -24,54 +24,13 @@
   "domain": {
     "namespaces": {
       "public": {
-        "enum": {
-          "Currency": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "PLN",
-                "value": "pln"
-              },
-              {
-                "name": "USD",
-                "value": "usd"
-              }
-            ]
-          },
-          "Language": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "PL",
-                "value": "pl"
-              },
-              {
-                "name": "EN",
-                "value": "en"
-              }
-            ]
-          },
-          "Theme": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "LIGHT",
-                "value": "light"
-              },
-              {
-                "name": "DARK",
-                "value": "dark"
-              }
-            ]
-          }
-        },
         "models": {
           "RefreshToken": {
             "fields": {
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -109,7 +68,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -124,24 +83,7 @@
                 }
               }
             },
-            "relations": {
-              "user": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "userId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "User",
-                  "namespace": "public"
-                }
-              }
-            },
+            "relations": {},
             "storage": {
               "fields": {
                 "createdAt": {
@@ -167,7 +109,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "RefreshToken"
+              "table": "refreshToken"
             }
           },
           "Subscription": {
@@ -189,7 +131,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -198,12 +140,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "Currency",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "description": {
@@ -247,7 +183,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -262,24 +198,7 @@
                 }
               }
             },
-            "relations": {
-              "user": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "userId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "User",
-                  "namespace": "public"
-                }
-              }
-            },
+            "relations": {},
             "storage": {
               "fields": {
                 "billingCycle": {
@@ -317,7 +236,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Subscription"
+              "table": "subscription"
             }
           },
           "User": {
@@ -325,7 +244,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -363,59 +282,12 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               }
             },
-            "relations": {
-              "preferences": {
-                "cardinality": "1:1",
-                "nullable": true,
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "userId"
-                  ]
-                },
-                "to": {
-                  "model": "UserPreferences",
-                  "namespace": "public"
-                }
-              },
-              "refreshTokens": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "userId"
-                  ]
-                },
-                "to": {
-                  "model": "RefreshToken",
-                  "namespace": "public"
-                }
-              },
-              "subscriptions": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "userId"
-                  ]
-                },
-                "to": {
-                  "model": "Subscription",
-                  "namespace": "public"
-                }
-              }
-            },
+            "relations": {},
             "storage": {
               "fields": {
                 "createdAt": {
@@ -438,7 +310,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "User"
+              "table": "user"
             }
           },
           "UserPreferences": {
@@ -446,7 +318,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -455,12 +327,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "Currency",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "id": {
@@ -478,12 +344,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "Language",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "monthlyBudget": {
@@ -505,12 +365,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "Theme",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "timezone": {
@@ -523,7 +377,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -538,24 +392,7 @@
                 }
               }
             },
-            "relations": {
-              "user": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "userId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "User",
-                  "namespace": "public"
-                }
-              }
-            },
+            "relations": {},
             "storage": {
               "fields": {
                 "createdAt": {
@@ -590,7 +427,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "UserPreferences"
+              "table": "userPreferences"
             }
           }
         }
@@ -602,10 +439,10 @@
       "public": {
         "entries": {
           "table": {
-            "RefreshToken": {
+            "refreshToken": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -637,7 +474,7 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -655,22 +492,23 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "RefreshToken_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "tokenHash"
-                  ]
+                  ],
+                  "name": "RefreshToken_tokenHash_key"
                 }
               ]
             },
-            "Subscription": {
+            "subscription": {
               "checks": [
                 {
-                  "expression": "\"curency\" IN ('pln', 'usd')",
-                  "name": "Subscription_curency_check_f9dd20e4",
-                  "prefix": "Subscription_curency_check"
+                  "expression": "(curency = ANY (ARRAY['pln'::text, 'usd'::text]))",
+                  "name": "Subscription_curency_check_f9dd20e4"
                 }
               ],
               "columns": {
@@ -685,7 +523,7 @@
                   "nullable": false
                 },
                 "createdAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -696,13 +534,7 @@
                 "curency": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "Currency",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "description": {
                   "codecId": "pg/text@1",
@@ -733,7 +565,7 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -751,14 +583,15 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "Subscription_pkey"
               },
               "uniques": []
             },
-            "User": {
+            "user": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -790,7 +623,7 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 }
@@ -800,37 +633,36 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "User_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "email"
-                  ]
+                  ],
+                  "name": "User_email_key"
                 }
               ]
             },
-            "UserPreferences": {
+            "userPreferences": {
               "checks": [
                 {
-                  "expression": "\"curency\" IN ('pln', 'usd')",
-                  "name": "UserPreferences_curency_check_f9dd20e4",
-                  "prefix": "UserPreferences_curency_check"
+                  "expression": "(curency = ANY (ARRAY['pln'::text, 'usd'::text]))",
+                  "name": "UserPreferences_curency_check_f9dd20e4"
                 },
                 {
-                  "expression": "\"language\" IN ('pl', 'en')",
-                  "name": "UserPreferences_language_check_a3491bd7",
-                  "prefix": "UserPreferences_language_check"
+                  "expression": "(language = ANY (ARRAY['pl'::text, 'en'::text]))",
+                  "name": "UserPreferences_language_check_a3491bd7"
                 },
                 {
-                  "expression": "\"theme\" IN ('light', 'dark')",
-                  "name": "UserPreferences_theme_check_753234b6",
-                  "prefix": "UserPreferences_theme_check"
+                  "expression": "(theme = ANY (ARRAY['light'::text, 'dark'::text]))",
+                  "name": "UserPreferences_theme_check_753234b6"
                 }
               ],
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -841,13 +673,7 @@
                 "curency": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "Currency",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "id": {
                   "codecId": "sql/char@1",
@@ -864,13 +690,7 @@
                     "value": "en"
                   },
                   "nativeType": "text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "Language",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "monthlyBudget": {
                   "codecId": "pg/float8@1",
@@ -889,13 +709,7 @@
                     "value": "light"
                   },
                   "nativeType": "text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "Theme",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "timezone": {
                   "codecId": "pg/text@1",
@@ -903,7 +717,7 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -921,32 +735,10 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "UserPreferences_pkey"
               },
               "uniques": []
-            }
-          },
-          "valueSet": {
-            "Currency": {
-              "kind": "valueSet",
-              "values": [
-                "pln",
-                "usd"
-              ]
-            },
-            "Language": {
-              "kind": "valueSet",
-              "values": [
-                "pl",
-                "en"
-              ]
-            },
-            "Theme": {
-              "kind": "valueSet",
-              "values": [
-                "light",
-                "dark"
-              ]
             }
           }
         },
@@ -954,118 +746,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "03e28c9b5caa0f36e67de191c1495e8d61160d6f36b1f2cd264be1597f69ee94"
-  },
-  "execution": {
-    "executionHash": "d1f0280373453c2756b086e474b677c6dfc491c8c6b3a65c4d5bb1b2e77c6889",
-    "mutations": {
-      "defaults": [
-        {
-          "onCreate": {
-            "id": "uuidv7",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "id",
-            "namespace": "public",
-            "table": "RefreshToken"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "RefreshToken"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "uuidv7",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "id",
-            "namespace": "public",
-            "table": "Subscription"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "Subscription"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "uuidv7",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "id",
-            "namespace": "public",
-            "table": "User"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "User"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "uuidv7",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "id",
-            "namespace": "public",
-            "table": "UserPreferences"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "UserPreferences"
-          }
-        }
-      ]
-    }
+    "storageHash": "1495b0bd951d402f8aec1a87b710b7bd50d83bcbc7a4b77351f12ebfba65d43d"
   },
   "capabilities": {
     "postgres": {

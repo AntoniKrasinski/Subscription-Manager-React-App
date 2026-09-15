@@ -1,13 +1,14 @@
 import e from "express";
 import authRoutes from "./routes/authRouter.js";
 import cors from "cors";
-
-const port = 3000;
+import { db } from "./prisma/db.js";
 
 const app = e();
-app.use(cors());
+app.use(cors()); //ToDo: Allow only server from .env file
 app.use(e.json());
+app.use(e.urlencoded({ extended: true }));
 
+const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
