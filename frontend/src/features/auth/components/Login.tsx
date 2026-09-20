@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { useLogin } from "../../../lib/auth";
 import type { LoginInput } from "../../../lib/auth";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState<LoginInput>({
     email: "",
     password: "",
   });
 
-  const logining = useLogin({ onSuccess: () => {} });
+  const logining = useLogin({ onSuccess: () => navigate("/dashboard") });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

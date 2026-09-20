@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { useRegister } from "../../../lib/auth";
 import type { RegisterInput } from "../../../lib/auth";
-
+import { useNavigate } from "react-router";
 
 const Register = () => {
+  const navigate = useNavigate()
+
   const [userData, setUserData] = useState<RegisterInput>({
     name: "",
     email: "",
     password: "",
   });
 
-  const registering = useRegister({
-    onSuccess: () => {},
+  const registerMutation = useRegister({
+    onSuccess: () => navigate("/dashboard"),
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +23,9 @@ const Register = () => {
   };
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    registering.mutate(userData);
+    registerMutation.mutate(userData);
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="flex flex-col">

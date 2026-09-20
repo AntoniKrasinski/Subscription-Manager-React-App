@@ -1,8 +1,6 @@
-//ToDo: export validation with zod and implement in forms
-import toast from "react-hot-toast";
-import type { AuthResponse } from "../types/api";
+import type { User, AuthResponse } from "../types/api";
 import { api } from "./apiClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const userQueryKey = ["user"];
 
@@ -13,9 +11,6 @@ export const useRegister = ({ onSuccess }: { onSuccess?: () => void }) => {
     onSuccess: (data) => {
       queryClient.setQueryData(userQueryKey, data.user);
       onSuccess?.();
-    },
-    onError: () => {
-      toast.error("error");
     },
   });
 };
@@ -31,6 +26,20 @@ export const useLogin = ({ onSuccess }: { onSuccess?: () => void }) => {
   });
 };
 
+export const useLogout = ({ onSuccess }: { onSuccess?: () => void }) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: userQueryKey });
+      onSuccess?.();
+    },
+  });
+};
+
+export const useUser = () =>
+  useQuery({ queryKey: userQueryKey, queryFn: getUser });
+
 const registerURL = "auth/register";
 export type RegisterInput = { name: string; email: string; password: string };
 
@@ -42,7 +51,7 @@ const registerWithEmailAndPassword = async (
       "Content-Type": "application/json",
     },
   });
-  return response.data;
+  return response?.data;
 };
 
 const loginURL = "auth/login";
@@ -56,5 +65,21 @@ const loginWithEmailAndPassword = async (
       "Content-Type": "application/json",
     },
   });
+
   return response.data;
 };
+
+const logoutURL = "auth/logout";
+
+const logout = async (): Promise<void> => {
+  return await api.post(logoutURL);
+};
+
+const getuserURL = "auth/me";
+
+const getUser = async (): Promise<User> => {
+  const response = await api.get(getuserURL);
+  return response.data;
+};
+
+

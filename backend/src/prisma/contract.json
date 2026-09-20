@@ -30,14 +30,14 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "expiresAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -54,7 +54,7 @@
               "revokedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamp-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -68,7 +68,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -131,11 +131,11 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
-              "curency": {
+              "currency": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -183,7 +183,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -210,8 +210,8 @@
                 "createdAt": {
                   "column": "createdAt"
                 },
-                "curency": {
-                  "column": "curency"
+                "currency": {
+                  "column": "currency"
                 },
                 "description": {
                   "column": "description"
@@ -244,7 +244,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -282,7 +282,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               }
@@ -318,11 +318,11 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
-              "curency": {
+              "currency": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -377,7 +377,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -398,8 +398,8 @@
                 "createdAt": {
                   "column": "createdAt"
                 },
-                "curency": {
-                  "column": "curency"
+                "currency": {
+                  "column": "currency"
                 },
                 "id": {
                   "column": "id"
@@ -442,7 +442,7 @@
             "refreshToken": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -451,8 +451,8 @@
                   "nullable": false
                 },
                 "expiresAt": {
-                  "codecId": "pg/timestamp-temporal@1",
-                  "nativeType": "timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
                   "nullable": false
                 },
                 "id": {
@@ -464,8 +464,8 @@
                   }
                 },
                 "revokedAt": {
-                  "codecId": "pg/timestamp-temporal@1",
-                  "nativeType": "timestamp",
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
                   "nullable": true
                 },
                 "tokenHash": {
@@ -474,7 +474,11 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -507,8 +511,8 @@
             "subscription": {
               "checks": [
                 {
-                  "expression": "(curency = ANY (ARRAY['pln'::text, 'usd'::text]))",
-                  "name": "Subscription_curency_check_f9dd20e4"
+                  "expression": "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))",
+                  "name": "Subscription_currency_check_f9dd20e4"
                 }
               ],
               "columns": {
@@ -523,7 +527,7 @@
                   "nullable": false
                 },
                 "createdAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -531,7 +535,7 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
-                "curency": {
+                "currency": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
@@ -551,6 +555,10 @@
                 },
                 "isActive": {
                   "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
                   "nativeType": "bool",
                   "nullable": false
                 },
@@ -565,7 +573,11 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -591,7 +603,7 @@
             "user": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -623,7 +635,11 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 }
@@ -648,8 +664,8 @@
             "userPreferences": {
               "checks": [
                 {
-                  "expression": "(curency = ANY (ARRAY['pln'::text, 'usd'::text]))",
-                  "name": "UserPreferences_curency_check_f9dd20e4"
+                  "expression": "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))",
+                  "name": "UserPreferences_currency_check_f9dd20e4"
                 },
                 {
                   "expression": "(language = ANY (ARRAY['pl'::text, 'en'::text]))",
@@ -662,7 +678,7 @@
               ],
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -670,7 +686,7 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
-                "curency": {
+                "currency": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
@@ -717,7 +733,11 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -746,7 +766,58 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "1495b0bd951d402f8aec1a87b710b7bd50d83bcbc7a4b77351f12ebfba65d43d"
+    "storageHash": "208333c7223dfb1fe42b7955c80f0dccc9484c557a8eb86aafa11625d634ca9a"
+  },
+  "execution": {
+    "executionHash": "95513ebb6f15a58c8775ad792d7269ef05dec6af14c220dab83ddc2441509bc1",
+    "mutations": {
+      "defaults": [
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "refreshToken"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "subscription"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "user"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "userPreferences"
+          }
+        }
+      ]
+    }
   },
   "capabilities": {
     "postgres": {

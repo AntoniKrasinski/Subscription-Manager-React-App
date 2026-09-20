@@ -2,53 +2,54 @@
 // Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
 
 model RefreshToken {
-  id        Char(36)    @id(map: "RefreshToken_pkey")
-  createdAt Timestamptz @default(now())
-  expiresAt Timestamp
-  revokedAt Timestamp?
-  tokenHash String      @unique(map: "RefreshToken_tokenHash_key")
-  updatedAt Timestamptz
+  id        Char(36)            @id(map: "RefreshToken_pkey") @default(uuid())
+  createdAt TimestamptzString   @default(now())
+  expiresAt TimestamptzString
+  revokedAt TimestamptzString?
+  tokenHash String              @unique(map: "RefreshToken_tokenHash_key")
+  updatedAt TimestamptzString   @default(now())
   userId    Char(36)
 }
 
 model Subscription {
-  id           Char(36)    @id(map: "Subscription_pkey")
-  billingCycle String
-  category     String
-  createdAt    Timestamptz @default(now())
-  curency      String
-  description  String?
-  isActive     Boolean
+  id           Char(36)           @id(map: "Subscription_pkey") @default(uuid())
+  userId       Char(36)
   price        Float
   title        String
-  updatedAt    Timestamptz
-  userId       Char(36)
+  description  String?
+  category     String
+  billingCycle String
+  currency      String
+  isActive     Boolean            @default(true)
+  createdAt    TimestamptzString           @default(now())
+  updatedAt    TimestamptzString  @default(now())
 
-  @@check(expression: "(curency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "Subscription_curency_check_f9dd20e4")
+
+  @@check(expression: "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "Subscription_currency_check_f9dd20e4")
 }
 
 model User {
-  id           Char(36)    @id(map: "User_pkey")
-  createdAt    Timestamptz @default(now())
-  email        String      @unique(map: "User_email_key")
+  id           Char(36)           @id(map: "User_pkey") @default(uuid())
+  createdAt    TimestamptzString  @default(now())
+  email        String             @unique(map: "User_email_key")
   name         String
-  updatedAt    Timestamptz
+  updatedAt    TimestamptzString  @default(now())
   passwordHash String
 }
 
 model UserPreferences {
-  id            Char(36)    @id(map: "UserPreferences_pkey")
-  createdAt     Timestamptz @default(now())
-  curency       String
-  language      String      @default("en")
+  id            Char(36)           @id(map: "UserPreferences_pkey") @default(uuid())
+  createdAt     TimestamptzString  @default(now())
+  currency       String
+  language      String             @default("en")
   monthlyBudget Float?
   reminders     Boolean
-  theme         String      @default("light")
+  theme         String             @default("light")
   timezone      String
-  updatedAt     Timestamptz
+  updatedAt     TimestamptzString  @default(now())
   userId        Char(36)
 
-  @@check(expression: "(curency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "UserPreferences_curency_check_f9dd20e4")
+  @@check(expression: "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "UserPreferences_currency_check_f9dd20e4")
   @@check(expression: "(language = ANY (ARRAY['pl'::text, 'en'::text]))", map: "UserPreferences_language_check_a3491bd7")
   @@check(expression: "(theme = ANY (ARRAY['light'::text, 'dark'::text]))", map: "UserPreferences_theme_check_753234b6")
 }

@@ -7,8 +7,11 @@ import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
 import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "react-hot-toast";
+import { mutationConfig } from "./lib/TanStackConfig";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  mutationCache: mutationConfig,
+});
 
 const router = createBrowserRouter([
   {
