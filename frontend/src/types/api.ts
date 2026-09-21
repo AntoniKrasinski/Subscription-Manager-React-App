@@ -14,11 +14,26 @@ type BillingCycle = "weekly" | "monthly" | "yearly";
 type Curency = "pln" | "usd";
 
 export interface Subscription {
-  userId: string;
+  id?: string;
   price: number;
   title: string;
-  description?: string;
   billingCycle: BillingCycle;
   category: string;
   currency: Curency;
+  isFreeTrial?: boolean;
+  freeTrialEnd?: Date | null;
+  nextBillingDate?: Date | null;
+  autopayment?: boolean;
+}
+
+export interface UpdateSubscriptionData {
+  price?: number;
+  title?: string;
+  billingCycle?: BillingCycle;
+  category?: string;
+  currency?: Curency;
+  isFreeTrial?: boolean;
+  freeTrialEnd?: Date | null;
+  nextBillingDate?: Date | null;
+  autopayment?: boolean;
 }

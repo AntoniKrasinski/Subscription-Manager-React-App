@@ -114,6 +114,13 @@
           },
           "Subscription": {
             "fields": {
+              "autopayment": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "billingCycle": {
                 "nullable": false,
                 "type": {
@@ -149,6 +156,13 @@
                   "kind": "scalar"
                 }
               },
+              "freeTrialEnd": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -163,6 +177,20 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "isFreeTrial": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "nextBillingDate": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -201,6 +229,9 @@
             "relations": {},
             "storage": {
               "fields": {
+                "autopayment": {
+                  "column": "autopayment"
+                },
                 "billingCycle": {
                   "column": "billingCycle"
                 },
@@ -216,11 +247,20 @@
                 "description": {
                   "column": "description"
                 },
+                "freeTrialEnd": {
+                  "column": "freeTrialEnd"
+                },
                 "id": {
                   "column": "id"
                 },
                 "isActive": {
                   "column": "isActive"
+                },
+                "isFreeTrial": {
+                  "column": "isFreeTrial"
+                },
+                "nextBillingDate": {
+                  "column": "nextBillingDate"
                 },
                 "price": {
                   "column": "price"
@@ -516,6 +556,15 @@
                 }
               ],
               "columns": {
+                "autopayment": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "billingCycle": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -545,6 +594,11 @@
                   "nativeType": "text",
                   "nullable": true
                 },
+                "freeTrialEnd": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "sql/char@1",
                   "nativeType": "character",
@@ -561,6 +615,20 @@
                   },
                   "nativeType": "bool",
                   "nullable": false
+                },
+                "isFreeTrial": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "nextBillingDate": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
                 },
                 "price": {
                   "codecId": "pg/float8@1",
@@ -766,7 +834,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "208333c7223dfb1fe42b7955c80f0dccc9484c557a8eb86aafa11625d634ca9a"
+    "storageHash": "ac4ddadceddb344ce05d0e1f0f3bb8b33495d7dd8e439278be03622a08d4b975"
   },
   "execution": {
     "executionHash": "95513ebb6f15a58c8775ad792d7269ef05dec6af14c220dab83ddc2441509bc1",

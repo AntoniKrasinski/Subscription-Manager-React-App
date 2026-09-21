@@ -13,6 +13,5 @@ export const useAddSubscription = () => {
 };
 
 const addSubscription = async (data: Subscription): Promise<void> => {
-  const response = await api.post("/subscriptions", data);
-  return response.data;
+  await api.post("/subscriptions", data);
 };

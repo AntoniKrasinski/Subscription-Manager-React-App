@@ -5,6 +5,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
+import Subscriptions from "./pages/Subscriptions";
+import Statistics from "./pages/Statistics";
+import Settings from "./pages/Settings";
 import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "react-hot-toast";
 import { mutationConfig } from "./lib/TanStackConfig";
@@ -34,6 +37,19 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/subscriptions",
+    element: <Subscriptions />,
+  },
+  {
+    path: "/statistics",
+    element: <Statistics />,
+  },
+  {
+    path: "/settings",
+    element: <Settings />,
+    
   },
 ]);
 

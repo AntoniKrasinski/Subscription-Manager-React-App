@@ -79,7 +79,7 @@ const getuserURL = "auth/me";
 
 const getUser = async (): Promise<User> => {
   const response = await api.get(getuserURL);
-  return response.data;
+  return response.data.data.user;
 };
 
 

@@ -1,32 +1,36 @@
 import React from "react";
-import { useAddSubscription } from "../features/subscriptions/api/subscriptionCreate.ts";
-import type { Subscription } from "../types/api.ts";
-import LogoutButton from "../features/auth/components/LogoutButton.tsx";
 import ProtectedRoute from "../components/layouts/ProtectedRoute.tsx";
+import { useUser } from "../lib/auth.ts";
+import AppLayout from "../components/layouts/AppLayout.tsx";
+import SmallCard from "../components/UI/SmallCard.tsx";
+import { useGetSubscriptionsStats } from "../features/subscriptions/api/getSubscriptionsStats.ts";
+
 const Dashboard = () => {
-  const data: Subscription = {
-    userId: "123",
-    price: 10.0,
-    title: "123gfdsa",
-    billingCycle: "weekly",
-    category: "sport",
-    currency: "usd",
-  };
-  const subscriptionMutation = useAddSubscription();
+  const user = useUser();
+  const stats = useGetSubscriptionsStats();
+
   return (
     <ProtectedRoute>
-      <div>Dashboard</div>
-      <div className="flex flex-col">
-        <button
-          onClick={() => {
-            subscriptionMutation.mutate(data);
-          }}
-        >
-          TEST
-        </button>
-        <LogoutButton />
-        <button onClick={() => {}}>REFRESHTOKEN</button>
-      </div>
+      <AppLayout>
+        <div>
+          <h2>Welcome, {user.isPending ? "..." : user.data!.name}!</h2>
+        </div>
+        <div className="grid grid-cols-3 grid-rows-1 gap-6">
+          <SmallCard
+            title="Total Subscriptions"
+            data={stats.isPending? "..." : stats.data!.activeSubscriptionsCount}
+            subTitle="Ammount of your subscrpiotns"
+          >
+            123
+          </SmallCard>
+          <SmallCard title="Monthly Costs" data={stats.isPending? "..." : stats.data!.thisMonthSpending} subTitle="123">
+            123
+          </SmallCard>
+          <SmallCard title="Yearly Costs" data={stats.isPending? "..." : stats.data!.yearlySpending} subTitle="123">
+            123
+          </SmallCard>
+        </div>
+      </AppLayout>
     </ProtectedRoute>
   );
 };
