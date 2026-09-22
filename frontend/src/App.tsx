@@ -10,10 +10,13 @@ import Statistics from "./pages/Statistics";
 import Settings from "./pages/Settings";
 import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "react-hot-toast";
-import { mutationConfig } from "./lib/TanStackConfig";
+import { mutationConfig, queriesConfig } from "./lib/TanStackConfig";
 
 const queryClient = new QueryClient({
   mutationCache: mutationConfig,
+  defaultOptions: {
+    queries: queriesConfig,
+  },
 });
 
 const router = createBrowserRouter([
@@ -49,7 +52,6 @@ const router = createBrowserRouter([
   {
     path: "/settings",
     element: <Settings />,
-    
   },
 ]);
 
