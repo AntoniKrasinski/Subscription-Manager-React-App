@@ -2,8 +2,9 @@ import { db } from "../prisma/db.ts";
 import bcrypt from "bcryptjs";
 import { generateJWT } from "../utils/generateJWT.ts";
 import { generateRT } from "../utils/generateRT.ts";
+import { type Response, type Request, response } from "express";
 
-const clearCookies = (res) => {
+const clearCookies = (res: Response) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
@@ -14,7 +15,7 @@ const clearCookies = (res) => {
   });
 };
 
-export const register = async (req, res) => {
+export const register = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   const isEmailTaken = await db.orm.public.User.where({ email: email }).first();
@@ -46,7 +47,7 @@ export const register = async (req, res) => {
   });
 };
 
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await db.orm.public.User.where({ email: email }).first();
   if (!user) {
@@ -74,7 +75,7 @@ export const login = async (req, res) => {
   });
 };
 
-export const logout = async (req, res) => {
+export const logout = async (req: Request, res: Response) => {
   clearCookies(res);
   res.status(200).json({
     status: "success",
@@ -82,7 +83,7 @@ export const logout = async (req, res) => {
   });
 };
 
-export const refresh = async (req, res) => {
+export const refresh = async (req: Request, res: Response) => {
   const refreshToken = req.cookies?.refreshToken;
 
   const tokens = await db.orm.public.RefreshToken.where({
@@ -127,7 +128,7 @@ export const refresh = async (req, res) => {
   });
 };
 
-export const me = async (req, res) => {
+export const me = async (req: Request, res: Response) => {
   const { user } = req;
 
   res.status(200).json({

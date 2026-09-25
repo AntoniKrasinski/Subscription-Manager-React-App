@@ -6,8 +6,8 @@ import {
   getSubscription,
   editSubscription,
   deleteSubscription,
-} from "../controllers/subscriptionController.js";
-import { authMiddleware } from "../middleware/authMiddleware.ts";
+} from "../controllers/subscriptionController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = e.Router();
 

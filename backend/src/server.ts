@@ -1,8 +1,8 @@
 import e from "express";
-import authRoutes from "./routes/authRouter.js";
-import subscriptionRoutes from "./routes/subscriptionRouter.js";
+import authRoutes from "./routes/authRouter.ts";
+import subscriptionRoutes from "./routes/subscriptionRouter.ts";
 import cors from "cors";
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
 import { db } from "./prisma/db.ts";
 
 const app = e();

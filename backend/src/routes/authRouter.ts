@@ -5,8 +5,8 @@ import {
   logout,
   refresh,
   me,
-} from "../controllers/authController.js";
-import { authMiddleware } from "../middleware/authMiddleware.ts";
+} from "../controllers/authController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = e.Router();
 
