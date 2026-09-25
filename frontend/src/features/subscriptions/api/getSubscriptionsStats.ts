@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../lib/apiClient";
+import { queryKeys } from "../../../lib/TanStackConfig/queryKeys";
 
 export const useGetSubscriptionsStats = () => {
   return useQuery({
-    queryKey: ["subscriptions", "stats"],
+    queryKey: queryKeys.subscriptionsStats,
     queryFn: getSubscriptionStats,
   });
 };

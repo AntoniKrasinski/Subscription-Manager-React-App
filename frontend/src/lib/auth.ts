@@ -1,15 +1,16 @@
 import type { User, AuthResponse } from "../types/api";
 import { api } from "./apiClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "./TanStackConfig/queryKeys";
 
-const userQueryKey = ["user"];
+
 
 export const useRegister = ({ onSuccess }: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: registerWithEmailAndPassword,
     onSuccess: (data) => {
-      queryClient.setQueryData(userQueryKey, data.user);
+      queryClient.setQueryData(queryKeys.user, data.user);
       onSuccess?.();
     },
   });
@@ -20,7 +21,7 @@ export const useLogin = ({ onSuccess }: { onSuccess?: () => void }) => {
   return useMutation({
     mutationFn: loginWithEmailAndPassword,
     onSuccess: (data) => {
-      queryClient.setQueryData(userQueryKey, data.user);
+      queryClient.setQueryData(queryKeys.user, data.user);
       onSuccess?.();
     },
   });
@@ -31,14 +32,14 @@ export const useLogout = ({ onSuccess }: { onSuccess?: () => void }) => {
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: userQueryKey });
+      queryClient.removeQueries({ queryKey: queryKeys.user });
       onSuccess?.();
     },
   });
 };
 
 export const useUser = () =>
-  useQuery({ queryKey: userQueryKey, queryFn: getUser });
+  useQuery({ queryKey: queryKeys.user, queryFn: getUser });
 
 const registerURL = "auth/register";
 export type RegisterInput = { name: string; email: string; password: string };

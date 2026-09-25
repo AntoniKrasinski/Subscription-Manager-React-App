@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../lib/apiClient";
 import type { Subscription } from "../../../types/api";
+import { queryKeys } from "../../../lib/TanStackConfig/queryKeys";
 
 export const useGetAllSubscriptions = () => {
   return useQuery({
-    queryKey: ["subscriptions"],
+    queryKey: queryKeys.subscriptions,
     queryFn: getAllSubscribers,
   });
 };
