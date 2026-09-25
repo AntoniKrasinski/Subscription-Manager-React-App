@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { Subscription } from "../../../types/api";
+import type { CreateSubscription, Subscription } from "../../../types/api";
 import { useAddSubscription } from "../api/addSubscription";
 import ModalLayout from "../../../components/layouts/ModalLayout";
 const AddSubscriptionForm = ({
@@ -12,7 +12,7 @@ const AddSubscriptionForm = ({
       setIsOpen(false);
     },
   });
-  const [subscriptionData, setSubscriptionData] = useState<Subscription>({
+  const [subscriptionData, setSubscriptionData] = useState<CreateSubscription>({
     price: 0,
     title: "",
     billingCycle: "monthly",

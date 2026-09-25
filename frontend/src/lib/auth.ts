@@ -3,8 +3,6 @@ import { api } from "./apiClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "./TanStackConfig/queryKeys";
 
-
-
 export const useRegister = ({ onSuccess }: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -47,12 +45,8 @@ export type RegisterInput = { name: string; email: string; password: string };
 const registerWithEmailAndPassword = async (
   data: RegisterInput,
 ): Promise<AuthResponse> => {
-  const response = await api.post(registerURL, data, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return response?.data;
+  const response = await api.post(registerURL, data);
+  return response.data.data;
 };
 
 const loginURL = "auth/login";
@@ -61,13 +55,9 @@ export type LoginInput = { email: string; password: string };
 const loginWithEmailAndPassword = async (
   data: LoginInput,
 ): Promise<AuthResponse> => {
-  const response = await api.post(loginURL, data, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await api.post(loginURL, data);
 
-  return response.data;
+  return response.data.data;
 };
 
 const logoutURL = "auth/logout";
@@ -76,11 +66,9 @@ const logout = async (): Promise<void> => {
   return await api.post(logoutURL);
 };
 
-const getuserURL = "auth/me";
+const getUserURL = "auth/me";
 
 const getUser = async (): Promise<User> => {
-  const response = await api.get(getuserURL);
+  const response = await api.get(getUserURL);
   return response.data.data.user;
 };
-
-

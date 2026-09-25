@@ -6,11 +6,11 @@ import { queryKeys } from "../../../lib/TanStackConfig/queryKeys";
 export const useGetAllSubscriptions = () => {
   return useQuery({
     queryKey: queryKeys.subscriptions,
-    queryFn: getAllSubscribers,
+    queryFn: getAllSubscriptions,
   });
 };
 
-const getAllSubscribers = async (): Promise<Subscription[]> => {
+const getAllSubscriptions = async (): Promise<Subscription[]> => {
   const response = await api.get("/subscriptions");
   return response.data.data.userSubscriptions;
 };

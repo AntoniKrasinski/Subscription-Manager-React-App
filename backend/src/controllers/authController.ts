@@ -69,7 +69,8 @@ export const login = async (req: Request, res: Response) => {
     data: {
       user: {
         id: user.id,
-        email: email,
+        name: user.name,
+        email: user.email,
       },
     },
   });
@@ -79,6 +80,7 @@ export const logout = async (req: Request, res: Response) => {
   clearCookies(res);
   res.status(200).json({
     status: "success",
+    data: null,
     message: "Logged out successfully",
   });
 };
