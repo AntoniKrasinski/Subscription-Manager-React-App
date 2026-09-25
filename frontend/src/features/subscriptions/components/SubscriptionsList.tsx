@@ -2,12 +2,14 @@ import React from "react";
 import { useGetAllSubscriptions } from "../api/getSubscriptions";
 import { useDeleteSubscription } from "../api/deleteSubscription";
 import EditSubscriptionButton from "./EditSubscriptionButton";
+import { getDaysUntil } from "../../../utils/getDaysUntl";
 const SubscriptionsList = () => {
   const {
     data: userSubscriptions,
     isLoading,
     isError,
   } = useGetAllSubscriptions();
+
   const deleteMutation = useDeleteSubscription();
 
   if (isLoading) {
@@ -16,13 +18,14 @@ const SubscriptionsList = () => {
   if (isError || !userSubscriptions) {
     return <div>error</div>;
   }
+  console.log(typeof userSubscriptions[0].nextBillingDate);
   return (
     <>
-      <div className="flex justify-center text-left">
+      <div className="flex  flex-col justify-center text-left p-8 h-full bg-card-bg border">
         {userSubscriptions.length === 0 ? (
           "add first subscription"
         ) : (
-          <table className="">
+          <table className="w-full  ">
             <thead>
               <tr>
                 <th>
@@ -65,8 +68,8 @@ const SubscriptionsList = () => {
                   <td>{subscription.billingCycle}</td>
                   <td>
                     {subscription.nextBillingDate
-                      ? subscription.nextBillingDate.toString()
-                      : ""}
+                      ? getDaysUntil(subscription.nextBillingDate)
+                      : getDaysUntil(subscription.freeTrialEnd as string)}
                   </td>
                   <td>
                     <span className="badge active">{"Active"}</span>
@@ -90,6 +93,10 @@ const SubscriptionsList = () => {
             </tbody>
           </table>
         )}
+        <div className="">
+          <button>Import</button>
+          <button>Export</button>
+        </div>
       </div>
     </>
   );

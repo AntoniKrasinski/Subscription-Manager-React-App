@@ -22,7 +22,7 @@ const navLinks: { name: string; to: string }[] = [
 
 const Navigation = () => {
   return (
-    <nav className=" h-4/5">
+    <nav className="">
       <ul>
         {navLinks.map((link) => (
           <li key={link.to}>

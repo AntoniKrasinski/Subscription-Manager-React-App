@@ -51,6 +51,7 @@ export const getAllSubscriptions = async (req, res) => {
   const userSubscriptions = await db.orm.public.Subscription.where({
     userId: user.id,
   }).all();
+
   res.status(200).json({ status: "success", data: { userSubscriptions } });
 };
 

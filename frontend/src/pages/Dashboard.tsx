@@ -4,11 +4,12 @@ import { useLogout, useUser } from "../lib/auth.ts";
 import AppLayout from "../components/layouts/AppLayout.tsx";
 import SmallCard from "../components/UI/SmallCard.tsx";
 import { useGetSubscriptionsStats } from "../features/subscriptions/api/getSubscriptionsStats.ts";
-import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 const Dashboard = () => {
   const user = useUser();
   const stats = useGetSubscriptionsStats();
-  const logoutMutatuon = useLogout({ onSuccess: () => { }});
+  const navigate = useNavigate()
+  const logoutMutatuon = useLogout({ onSuccess: () => { navigate("/login") }});
   return (
     <ProtectedRoute>
       <AppLayout>

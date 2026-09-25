@@ -2,13 +2,19 @@ import { api } from "../../../lib/apiClient";
 import type { Subscription } from "../../../types/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useAddSubscription = () => {
+export const useAddSubscription = ({
+  onSuccess,
+}: {
+  onSuccess: () => void;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addSubscription,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["subscriptions"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subscriptions"] });
+      onSuccess?.();
+    },
   });
 };
 

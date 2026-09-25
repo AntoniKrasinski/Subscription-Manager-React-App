@@ -8,8 +8,8 @@ const Subscriptions = () => {
   return (
     <ProtectedRoute>
       <AppLayout>
-        <div>
-          Subscriptions <AddSubscriptionButton />
+        <div className="flex justify-between items-center">
+          <h2>Subscriptions</h2> <AddSubscriptionButton />
         </div>
         <SubscriptionsList />
       </AppLayout>

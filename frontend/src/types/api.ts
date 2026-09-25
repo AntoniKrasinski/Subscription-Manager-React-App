@@ -21,8 +21,8 @@ export interface Subscription {
   category: string;
   currency: Curency;
   isFreeTrial?: boolean;
-  freeTrialEnd?: Date | null;
-  nextBillingDate?: Date | null;
+  freeTrialEnd?: string | null;
+  nextBillingDate?: string | null;
   autopayment?: boolean;
 }
 
@@ -33,7 +33,7 @@ export interface UpdateSubscriptionData {
   category?: string;
   currency?: Curency;
   isFreeTrial?: boolean;
-  freeTrialEnd?: Date | null;
-  nextBillingDate?: Date | null;
+  freeTrialEnd?: string | null;
+  nextBillingDate?: string | null;
   autopayment?: boolean;
 }

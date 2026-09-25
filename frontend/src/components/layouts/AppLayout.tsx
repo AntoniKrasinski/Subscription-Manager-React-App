@@ -6,13 +6,13 @@ import Logo from "../UI/Logo";
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex w-screen h-screen">
-      <div className="w-1/5 h-full border-r">
+      <aside className="w-1/7 items-center flex flex-col h-full border-r">
         <Logo />
         <Navigation />
-      </div>
-      <div className="flex flex-col w-4/5">
+      </aside>
+      <div className="flex flex-col w-6/7 h-full">
         <Header />
-        <div className="p-8 space-y-8 ">{children}</div>
+        <main className="mx-auto w-full max-w-7xl p-8 space-y-8">{children}</main>
       </div>
     </div>
   );

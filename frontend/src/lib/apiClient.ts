@@ -7,7 +7,6 @@ export const api = axios.create({
 // RefreshToken creates new jwt when req fails
 api.interceptors.response.use(
   (response) => {
-    console.log("interceptor");
     return response;
   },
   async (error) => {
@@ -15,7 +14,6 @@ api.interceptors.response.use(
     if (error.response.status !== 401 || error.config._retry) {
       return Promise.reject(error);
     }
-
     try {
       error.config._retry = true;
       await api.post("/auth/refresh");

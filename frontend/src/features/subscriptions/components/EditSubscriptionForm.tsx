@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useUpdateSubscription } from "../api/updateSubscription";
 import type { UpdateSubscriptionData } from "../../../types/api";
+import ModalLayout from "../../../components/layouts/ModalLayout";
 const EditSubscriptionForm = ({
   subscriptionId,
   setIsOpen,
@@ -27,7 +28,11 @@ const EditSubscriptionForm = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+    <ModalLayout
+      onClick={() => {
+        setIsOpen(false);
+      }}
+    >
       <button
         onClick={() => {
           setIsOpen(false);
@@ -52,7 +57,7 @@ const EditSubscriptionForm = ({
         </div>
         <button type="submit">Submit</button>
       </form>
-    </div>
+    </ModalLayout>
   );
 };
 
