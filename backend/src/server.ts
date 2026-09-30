@@ -2,25 +2,25 @@ import e from "express";
 import authRoutes from "./routes/authRouter.ts";
 import subscriptionRoutes from "./routes/subscriptionRouter.ts";
 import preferencesRoutes from "./routes/preferencesRouter.ts";
+import statsRoutes from "./routes/statsRouter.ts";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { db } from "./prisma/db.ts";
 
+const PORT = process.env.PORT;
+const FRONTEND_URL = process.env.FRONTEND_URL;
+
 const app = e();
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(e.json());
 app.use(e.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});
-
-app.get("/", (req, res) => {
-  res.json({hello: "world"})
+app.listen(PORT, () => {
+  console.log(`Server is running.`);
 });
 
 app.use("/auth", authRoutes);
 app.use("/subscriptions", subscriptionRoutes);
 app.use("/preferences", preferencesRoutes);
+app.use("/stats", statsRoutes);

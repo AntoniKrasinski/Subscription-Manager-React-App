@@ -66,11 +66,7 @@ const SubscriptionsList = () => {
                     {subscription.price} {subscription.currency}
                   </td>
                   <td>{subscription.billingCycle}</td>
-                  <td>
-                    {subscription.nextBillingDate
-                      ? getDaysUntil(subscription.nextBillingDate)
-                      : getDaysUntil(subscription.freeTrialEnd as string)}
-                  </td>
+                  <td>{getDaysUntil(subscription.nextBillingDate)}</td>
                   <td>
                     <span className="badge active">{"Active"}</span>
                   </td>

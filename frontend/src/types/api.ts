@@ -19,7 +19,7 @@ export interface Subscription {
   category: string;
   currency: Currency;
   isFreeTrial: boolean;
-  nextBillingDate: string | null;
+  nextBillingDate: string;
   autopayment: boolean;
 }
 
@@ -47,4 +47,10 @@ export interface UpdateSubscription {
 
 export interface UserPreferences {
   s: string;
+}
+
+export interface SubscriptionsStats {
+  activeSubscriptionsCount: string;
+  thisMonthSpending: string;
+  yearlySpending: string;
 }

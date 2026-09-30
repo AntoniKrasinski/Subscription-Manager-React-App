@@ -29,6 +29,9 @@ const getExchangeRate = async (currency: string) => {
 export const currencyExchange = async (
   subscriptions: Subscription[],
 ): Promise<Subscription[]> => {
+  if (subscriptions.length === 0) {
+    return [];
+  }
   const userId = subscriptions[0].userId as Char<36>;
 
   const preferences = await db.orm.public.UserPreferences.where({

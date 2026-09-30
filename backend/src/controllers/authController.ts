@@ -27,31 +27,39 @@ export const register = async (req: Request, res: Response) => {
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(password, salt);
 
-  const user = await db.orm.public.User.create({
-    name,
-    email,
-    passwordHash,
-  });
+  try {
+    const user = await db.transaction(async (tx) => {
+      const user = await tx.orm.public.User.create({
+        name,
+        email,
+        passwordHash,
+      });
+      await tx.orm.public.UserPreferences.create({
+        userId: user.id,
+        currency: "pln",
+        reminders: false,
+        timezone: "Europe/Warsaw",
+      });
+      return user;
+    });
 
-  await db.orm.public.UserPreferences.create({
-    userId: user.id,
-    currency: "pln",
-    reminders: false,
-    timezone: "Europe/Warsaw",
-  });
-
-  generateJWT(user.id, res);
-  await generateRT(user.id, res);
-  res.status(201).json({
-    status: "success",
-    data: {
-      user: {
-        id: user.id,
-        name: name,
-        email: email,
+    generateJWT(user.id, res);
+    await generateRT(user.id, res);
+    res.status(201).json({
+      status: "success",
+      data: {
+        user: {
+          id: user.id,
+          name: name,
+          email: email,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Failed to create account.",
+    });
+  }
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -94,8 +102,8 @@ export const logout = async (req: Request, res: Response) => {
 
 export const refresh = async (req: Request, res: Response) => {
   const refreshToken = req.cookies.refreshToken;
-  if(!refreshToken){
-    return res.status(400).json({error: "No refresh token provided"})
+  if (!refreshToken) {
+    return res.status(400).json({ error: "No refresh token provided" });
   }
   const tokens = await db.orm.public.RefreshToken.where({
     revokedAt: null,
