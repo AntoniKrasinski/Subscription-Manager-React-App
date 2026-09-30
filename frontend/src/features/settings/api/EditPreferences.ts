@@ -6,10 +6,16 @@ export const useEditPreferences = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: editPreferences,
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.preferences,
-      }),
+    onSuccess: () => {
+      return (
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.preferences,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.subscriptionsStats,
+        })
+      );
+    },
   });
 };
 

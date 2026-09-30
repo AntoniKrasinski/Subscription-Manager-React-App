@@ -16,9 +16,6 @@ const Dashboard = () => {
       navigate("/login");
     },
   });
-  if (!preferences.isLoading) {
-    console.log(preferences.data.currency);
-  }
 
   return (
     <ProtectedRoute>
