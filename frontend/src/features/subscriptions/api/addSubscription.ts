@@ -1,6 +1,6 @@
 import { api } from "../../../lib/apiClient";
 import { queryKeys } from "../../../lib/TanStackConfig/queryKeys";
-import type { Subscription } from "../../../types/api";
+import type { CreateSubscription } from "../../../types/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useAddSubscription = ({
@@ -19,6 +19,6 @@ export const useAddSubscription = ({
   });
 };
 
-const addSubscription = async (data: Subscription): Promise<void> => {
+const addSubscription = async (data: CreateSubscription): Promise<void> => {
   await api.post("/subscriptions", data);
 };

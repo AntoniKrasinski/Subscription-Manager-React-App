@@ -2,7 +2,7 @@ import { db } from "../prisma/db.ts";
 import bcrypt from "bcryptjs";
 import { generateJWT } from "../utils/generateJWT.ts";
 import { generateRT } from "../utils/generateRT.ts";
-import { type Response, type Request, response } from "express";
+import { type Response, type Request } from "express";
 
 const clearCookies = (res: Response) => {
   res.cookie("jwt", "", {
@@ -31,6 +31,13 @@ export const register = async (req: Request, res: Response) => {
     name,
     email,
     passwordHash,
+  });
+
+  await db.orm.public.UserPreferences.create({
+    userId: user.id,
+    currency: "pln",
+    reminders: false,
+    timezone: "Europe/Warsaw",
   });
 
   generateJWT(user.id, res);
@@ -86,8 +93,10 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 export const refresh = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies?.refreshToken;
-
+  const refreshToken = req.cookies.refreshToken;
+  if(!refreshToken){
+    return res.status(400).json({error: "No refresh token provided"})
+  }
   const tokens = await db.orm.public.RefreshToken.where({
     revokedAt: null,
   }).all();
@@ -117,6 +126,12 @@ export const refresh = async (req: Request, res: Response) => {
   }
 
   const userId = tokenRecord.userId;
+  const user = await db.orm.public.User.where({ id: userId }).first();
+
+  if (!user) {
+    clearCookies(res);
+    return res.status(400).json({ error: "User not found." });
+  }
 
   generateJWT(userId, res);
   await generateRT(userId, res);
@@ -131,7 +146,7 @@ export const refresh = async (req: Request, res: Response) => {
 };
 
 export const me = async (req: Request, res: Response) => {
-  const { user } = req;
+  const user = req.user;
 
   res.status(200).json({
     status: "success",

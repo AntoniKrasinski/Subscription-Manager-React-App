@@ -5,11 +5,21 @@ import AppLayout from "../components/layouts/AppLayout.tsx";
 import SmallCard from "../components/UI/SmallCard.tsx";
 import { useGetSubscriptionsStats } from "../features/subscriptions/api/getSubscriptionsStats.ts";
 import { useNavigate } from "react-router";
+import { usePreferences } from "../features/settings/api/GetPreferences.ts";
 const Dashboard = () => {
   const user = useUser();
+  const preferences = usePreferences();
   const stats = useGetSubscriptionsStats();
-  const navigate = useNavigate()
-  const logoutMutatuon = useLogout({ onSuccess: () => { navigate("/login") }});
+  const navigate = useNavigate();
+  const logoutMutatuon = useLogout({
+    onSuccess: () => {
+      navigate("/login");
+    },
+  });
+  if (!preferences.isLoading) {
+    console.log(preferences.data.currency);
+  }
+
   return (
     <ProtectedRoute>
       <AppLayout>
@@ -28,7 +38,7 @@ const Dashboard = () => {
           </SmallCard>
           <SmallCard
             title="Monthly Costs"
-            data={stats.isPending ? "..." : stats.data!.thisMonthSpending}
+            data={`${stats.isPending ? "..." : stats.data!.thisMonthSpending} ${preferences.isPending ? "..." : `${preferences.data.currency}/mounth`}`}
             subTitle="123"
           >
             123

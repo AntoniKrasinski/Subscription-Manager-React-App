@@ -1,6 +1,7 @@
 import e from "express";
 import authRoutes from "./routes/authRouter.ts";
 import subscriptionRoutes from "./routes/subscriptionRouter.ts";
+import preferencesRoutes from "./routes/preferencesRouter.ts";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { db } from "./prisma/db.ts";
@@ -22,3 +23,4 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/subscriptions", subscriptionRoutes);
+app.use("/preferences", preferencesRoutes);

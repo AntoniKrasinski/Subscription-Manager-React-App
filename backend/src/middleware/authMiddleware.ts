@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
 import type { JwtPayload } from "jsonwebtoken";
 import { db } from "../prisma/db.ts";
+import { Char } from "@prisma/orm-postgres/target/codec-types";
 
 export const authMiddleware = async (
   req: Request,
@@ -29,7 +30,11 @@ export const authMiddleware = async (
       return res.status(401).json({ error: "User no longer exists" });
     }
 
-    req.user = user;
+    req.user = {
+      id: user.id as Char<36>,
+      name: user.name,
+      email: user.email,
+    };
   } catch (error) {
     return res.status(401).json({ error: "Not authorized, token failed" });
   }

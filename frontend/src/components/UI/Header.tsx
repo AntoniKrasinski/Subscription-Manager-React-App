@@ -1,5 +1,4 @@
 import { CircleUser } from "lucide-react";
-import React from "react";
 import { useUser } from "../../lib/auth";
 
 const Header = () => {

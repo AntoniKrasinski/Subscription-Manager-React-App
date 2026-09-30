@@ -47,3 +47,7 @@ export interface UpdateSubscription {
   nextBillingDate?: string | null;
   autopayment?: boolean;
 }
+
+export interface UserPreferences {
+  s: string;
+}

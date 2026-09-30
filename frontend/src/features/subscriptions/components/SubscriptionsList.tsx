@@ -18,7 +18,7 @@ const SubscriptionsList = () => {
   if (isError || !userSubscriptions) {
     return <div>error</div>;
   }
-  console.log(typeof userSubscriptions[0].nextBillingDate);
+
   return (
     <>
       <div className="flex  flex-col justify-center text-left p-8 h-full bg-card-bg border">
@@ -76,7 +76,7 @@ const SubscriptionsList = () => {
                   </td>
                   <td>
                     {" "}
-                    <EditSubscriptionButton subscriptionId={subscription.id!} />
+                    <EditSubscriptionButton subscription={subscription} />
                   </td>
                   <td>
                     {" "}

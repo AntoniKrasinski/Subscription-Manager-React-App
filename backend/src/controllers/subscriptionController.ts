@@ -1,8 +1,14 @@
 import e from "express";
 import { db } from "../prisma/db.ts";
 import { subscribe } from "node:diagnostics_channel";
+import type { Request, Response } from "express";
+import { Char } from "@prisma/orm-postgres/target/codec-types";
 
-export const addSubscription = async (req, res) => {
+interface SubscriptionParams {
+  id: Char<36>;
+}
+
+export const addSubscription = async (req: Request, res: Response) => {
   const {
     price,
     title,
@@ -46,18 +52,24 @@ export const addSubscription = async (req, res) => {
   });
 };
 
-export const getAllSubscriptions = async (req, res) => {
-  const { user } = req;
+export const getAllSubscriptions = async (req: Request, res: Response) => {
+  const { id: userId } = req.user;
   const userSubscriptions = await db.orm.public.Subscription.where({
-    userId: user.id,
+    userId,
   }).all();
 
   res.status(200).json({ status: "success", data: { userSubscriptions } });
 };
 
-export const getSubscription = async (req, res) => {};
+export const getSubscription = async (
+  req: Request<SubscriptionParams>,
+  res: Response,
+) => {};
 
-export const deleteSubscription = async (req, res) => {
+export const deleteSubscription = async (
+  req: Request<SubscriptionParams>,
+  res: Response,
+) => {
   const subscription = await db.orm.public.Subscription.where({
     id: req.params.id,
   }).first();
@@ -81,7 +93,10 @@ export const deleteSubscription = async (req, res) => {
     .json({ status: "success", message: "Subscription successfully  removed" });
 };
 
-export const editSubscription = async (req, res) => {
+export const editSubscription = async (
+  req: Request<SubscriptionParams>,
+  res: Response,
+) => {
   const subscription = await db.orm.public.Subscription.where({
     id: req.params.id,
   }).first();
@@ -128,7 +143,7 @@ export const editSubscription = async (req, res) => {
     .json({ status: "success", message: "Subscription successfully updated." });
 };
 
-export const getSubscriptionsStats = async (req, res) => {
+export const getSubscriptionsStats = async (req: Request, res: Response) => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
@@ -142,7 +157,7 @@ export const getSubscriptionsStats = async (req, res) => {
   const activeSubscriptionsCount = activeSubscriptions.length;
   const thisMonthSpending = activeSubscriptions.reduce(
     (total, subscription) => {
-      const billingDate = new Date(subscription.nextBillingDate);
+      const billingDate = new Date(subscription.nextBillingDate as string);
 
       if (subscription.billingCycle === "weekly") {
         while (
@@ -173,6 +188,7 @@ export const getSubscriptionsStats = async (req, res) => {
     },
     0,
   );
+
   const yearlySpending = activeSubscriptions.reduce((total, subscription) => {
     switch (subscription.billingCycle) {
       case "weekly":
@@ -188,8 +204,13 @@ export const getSubscriptionsStats = async (req, res) => {
         return total;
     }
   }, 0);
+
   res.status(200).json({
     status: "success",
-    data: { activeSubscriptionsCount, thisMonthSpending, yearlySpending },
+    data: {
+      activeSubscriptionsCount,
+      thisMonthSpending: thisMonthSpending.toFixed(2),
+      yearlySpending: yearlySpending.toFixed(2),
+    },
   });
 };

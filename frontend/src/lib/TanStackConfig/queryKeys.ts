@@ -3,4 +3,5 @@ export const queryKeys = {
   subscriptions: ["subscriptions"] as const,
   subscriptionsStats: ["subscriptions", "stats"] as const,
   statistics: ["statistics"] as const,
+  preferences: ["preferences"] as const,
 };

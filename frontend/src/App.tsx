@@ -10,7 +10,8 @@ import Statistics from "./pages/Statistics";
 import Settings from "./pages/Settings";
 import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "react-hot-toast";
-import { mutationConfig, queriesConfig } from "./lib/TanStackConfig";
+import { mutationConfig } from "./lib/TanStackConfig/mutatuonCacheConfig";
+import { queriesConfig } from "./lib/TanStackConfig/queriesConfig";
 
 const queryClient = new QueryClient({
   mutationCache: mutationConfig,

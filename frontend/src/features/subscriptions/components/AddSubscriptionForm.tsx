@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { CreateSubscription, Subscription } from "../../../types/api";
+import type { CreateSubscription } from "../../../types/api";
 import { useAddSubscription } from "../api/addSubscription";
 import ModalLayout from "../../../components/layouts/ModalLayout";
 const AddSubscriptionForm = ({
@@ -13,7 +13,7 @@ const AddSubscriptionForm = ({
     },
   });
   const [subscriptionData, setSubscriptionData] = useState<CreateSubscription>({
-    price: 0,
+    price: 0.0,
     title: "",
     billingCycle: "monthly",
     category: "",
@@ -76,9 +76,9 @@ const AddSubscriptionForm = ({
             id="price"
             name="price"
             type="number"
-            min="0"
+            min="0.00"
             step="0.01"
-            value={subscriptionData.price}
+            value={subscriptionData.price.toFixed(2)}
             onChange={handleChange}
             placeholder="0.00"
             required

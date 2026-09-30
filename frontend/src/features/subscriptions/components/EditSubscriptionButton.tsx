@@ -2,10 +2,11 @@ import React from "react";
 import Button from "../../../components/UI/Button";
 import EditSubscriptionForm from "./EditSubscriptionForm";
 import { useState } from "react";
+import type { Subscription } from "../../../types/api";
 const EditSubscriptionButton = ({
-  subscriptionId,
+  subscription,
 }: {
-  subscriptionId: string;
+  subscription: Subscription;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -13,7 +14,7 @@ const EditSubscriptionButton = ({
       {isOpen && (
         <EditSubscriptionForm
           setIsOpen={setIsOpen}
-          subscriptionId={subscriptionId}
+          subscription={subscription}
         />
       )}
       <Button
