@@ -19,8 +19,7 @@ const EditSubscriptionForm = ({
     category: subscription.category,
     currency: subscription.currency,
     isFreeTrial: subscription.isFreeTrial,
-    freeTrialEnd: subscription.freeTrialEnd,
-    nextBillingDate: subscription.nextBillingDate,
+    nextBillingDate: subscription.nextBillingDate?.slice(0, 10),
   });
 
   const handleChange = (
@@ -148,33 +147,22 @@ const EditSubscriptionForm = ({
           />
         </div>
 
-        {subscriptionData.isFreeTrial ? (
-          <div className="formField">
-            <label htmlFor="freeTrialEnd">Koniec okresu próbnego</label>
+        <div className="formField">
+          <label htmlFor="nextBillingDate">
+            {subscriptionData.isFreeTrial
+              ? "Koniec darmowego okresu"
+              : "Następna płatność"}
+          </label>
 
-            <input
-              id="freeTrialEnd"
-              name="freeTrialEnd"
-              type="date"
-              value={subscriptionData.freeTrialEnd ?? ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ) : (
-          <div className="formField">
-            <label htmlFor="nextBillingDate">Następna płatność</label>
-
-            <input
-              id="nextBillingDate"
-              name="nextBillingDate"
-              type="date"
-              value={subscriptionData.nextBillingDate ?? ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        )}
+          <input
+            id="nextBillingDate"
+            name="nextBillingDate"
+            type="date"
+            value={subscriptionData.nextBillingDate ?? ""}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
         <button type="submit" disabled={editSubscriptionMutation.isPending}>
           {editSubscriptionMutation.isPending

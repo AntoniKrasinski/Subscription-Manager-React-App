@@ -1,8 +1,7 @@
-import e from "express";
 import { db } from "../prisma/db.ts";
-import { subscribe } from "node:diagnostics_channel";
 import type { Request, Response } from "express";
 import { Char } from "@prisma/orm-postgres/target/codec-types";
+import { currencyExchange } from "../utils/currencyExchange.ts";
 
 interface SubscriptionParams {
   id: Char<36>;
@@ -30,7 +29,6 @@ export const addSubscription = async (req: Request, res: Response) => {
     category,
     currency,
     isFreeTrial,
-    freeTrialEnd,
     nextBillingDate,
   });
   res.status(201).json({
@@ -120,7 +118,6 @@ export const editSubscription = async (
     currency,
     isActive,
     isFreeTrial,
-    freeTrialEnd,
     nextBillingDate,
   } = req.body;
 
@@ -135,7 +132,6 @@ export const editSubscription = async (
     currency,
     isActive,
     isFreeTrial,
-    freeTrialEnd,
     nextBillingDate,
   });
   res
@@ -151,31 +147,40 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
   const userSubscriptions = await db.orm.public.Subscription.where({
     userId: user.id,
   }).all();
-  const activeSubscriptions = userSubscriptions.filter(
+  let activeSubscriptions = userSubscriptions.filter(
     (e) => e.isActive === true,
   );
   const activeSubscriptionsCount = activeSubscriptions.length;
-  const thisMonthSpending = activeSubscriptions.reduce(
+
+  const subscriptionsWithUserCurrency =
+    await currencyExchange(activeSubscriptions);
+
+  const thisMonthSpending = subscriptionsWithUserCurrency.reduce(
     (total, subscription) => {
       const billingDate = new Date(subscription.nextBillingDate as string);
 
       if (subscription.billingCycle === "weekly") {
         while (
-          billingDate.getMonth() === currentMonth &&
-          billingDate.getFullYear() === currentYear
+          billingDate.getFullYear() < currentYear ||
+          (billingDate.getFullYear() === currentYear &&
+            billingDate.getMonth() < currentMonth)
         ) {
-          total += subscription.price;
-
           billingDate.setDate(billingDate.getDate() + 7);
         }
-      } else if (subscription.billingCycle === "monthly") {
-        if (
-          billingDate.getMonth() === currentMonth &&
-          billingDate.getFullYear() === currentYear
+
+        while (
+          billingDate.getFullYear() === currentYear &&
+          billingDate.getMonth() === currentMonth
         ) {
           total += subscription.price;
+          billingDate.setDate(billingDate.getDate() + 7);
         }
-      } else if (subscription.billingCycle === "yearly") {
+      }
+
+      if (
+        subscription.billingCycle === "monthly" ||
+        subscription.billingCycle === "yearly"
+      ) {
         if (
           billingDate.getMonth() === currentMonth &&
           billingDate.getFullYear() === currentYear
@@ -189,21 +194,24 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
     0,
   );
 
-  const yearlySpending = activeSubscriptions.reduce((total, subscription) => {
-    switch (subscription.billingCycle) {
-      case "weekly":
-        return total + subscription.price * 52;
+  const yearlySpending = subscriptionsWithUserCurrency.reduce(
+    (total, subscription) => {
+      switch (subscription.billingCycle) {
+        case "weekly":
+          return total + subscription.price * 52;
 
-      case "monthly":
-        return total + subscription.price * 12;
+        case "monthly":
+          return total + subscription.price * 12;
 
-      case "yearly":
-        return total + subscription.price;
+        case "yearly":
+          return total + subscription.price;
 
-      default:
-        return total;
-    }
-  }, 0);
+        default:
+          return total;
+      }
+    },
+    0,
+  );
 
   res.status(200).json({
     status: "success",

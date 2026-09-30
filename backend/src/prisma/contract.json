@@ -4,6 +4,10 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "currencyExchanges": {
+      "model": "CurrencyExchanges",
+      "namespace": "public"
+    },
     "refreshToken": {
       "model": "RefreshToken",
       "namespace": "public"
@@ -25,6 +29,57 @@
     "namespaces": {
       "public": {
         "models": {
+          "CurrencyExchanges": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "currency": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "effectiveDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "rates": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "currency": {
+                  "column": "currency"
+                },
+                "effectiveDate": {
+                  "column": "effectiveDate"
+                },
+                "rates": {
+                  "column": "rates"
+                }
+              },
+              "namespaceId": "public",
+              "table": "currencyExchanges"
+            }
+          },
           "RefreshToken": {
             "fields": {
               "createdAt": {
@@ -114,13 +169,6 @@
           },
           "Subscription": {
             "fields": {
-              "autopayment": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/bool@1",
-                  "kind": "scalar"
-                }
-              },
               "billingCycle": {
                 "nullable": false,
                 "type": {
@@ -156,13 +204,6 @@
                   "kind": "scalar"
                 }
               },
-              "freeTrialEnd": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar"
-                }
-              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -188,7 +229,7 @@
                 }
               },
               "nextBillingDate": {
-                "nullable": true,
+                "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
@@ -229,9 +270,6 @@
             "relations": {},
             "storage": {
               "fields": {
-                "autopayment": {
-                  "column": "autopayment"
-                },
                 "billingCycle": {
                   "column": "billingCycle"
                 },
@@ -246,9 +284,6 @@
                 },
                 "description": {
                   "column": "description"
-                },
-                "freeTrialEnd": {
-                  "column": "freeTrialEnd"
                 },
                 "id": {
                   "column": "id"
@@ -479,6 +514,37 @@
       "public": {
         "entries": {
           "table": {
+            "currencyExchanges": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "currency": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "effectiveDate": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "rates": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "uniques": []
+            },
             "refreshToken": {
               "columns": {
                 "createdAt": {
@@ -556,15 +622,6 @@
                 }
               ],
               "columns": {
-                "autopayment": {
-                  "codecId": "pg/bool@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": true
-                  },
-                  "nativeType": "bool",
-                  "nullable": false
-                },
                 "billingCycle": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -592,11 +649,6 @@
                 "description": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
-                },
-                "freeTrialEnd": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
                   "nullable": true
                 },
                 "id": {
@@ -628,7 +680,7 @@
                 "nextBillingDate": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
-                  "nullable": true
+                  "nullable": false
                 },
                 "price": {
                   "codecId": "pg/float8@1",
@@ -834,7 +886,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "ac4ddadceddb344ce05d0e1f0f3bb8b33495d7dd8e439278be03622a08d4b975"
+    "storageHash": "11f68b5b94d443b3ef9176709c4c7939e4e54853f7a232da7fe803a4f2981a23"
   },
   "execution": {
     "executionHash": "95513ebb6f15a58c8775ad792d7269ef05dec6af14c220dab83ddc2441509bc1",

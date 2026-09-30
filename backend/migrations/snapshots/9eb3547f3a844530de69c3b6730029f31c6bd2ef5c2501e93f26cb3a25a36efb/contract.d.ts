@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'11f68b5b94d443b3ef9176709c4c7939e4e54853f7a232da7fe803a4f2981a23'>;
+  StorageHashBase<'9eb3547f3a844530de69c3b6730029f31c6bd2ef5c2501e93f26cb3a25a36efb'>;
 export type ExecutionHash =
   ExecutionHashBase<'95513ebb6f15a58c8775ad792d7269ef05dec6af14c220dab83ddc2441509bc1'>;
 export type ProfileHash =
@@ -265,8 +265,6 @@ export type FieldOutputTypes = {
       readonly description: CodecTypes['pg/text@1']['output'] | null;
       readonly category: CodecTypes['pg/text@1']['output'];
       readonly billingCycle: CodecTypes['pg/text@1']['output'];
-      readonly isFreeTrial: CodecTypes['pg/bool@1']['output'];
-      readonly nextBillingDate: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly currency: CodecTypes['pg/text@1']['output'];
       readonly isActive: CodecTypes['pg/bool@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -319,8 +317,6 @@ export type FieldInputTypes = {
       readonly description: CodecTypes['pg/text@1']['input'] | null;
       readonly category: CodecTypes['pg/text@1']['input'];
       readonly billingCycle: CodecTypes['pg/text@1']['input'];
-      readonly isFreeTrial: CodecTypes['pg/bool@1']['input'];
-      readonly nextBillingDate: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly currency: CodecTypes['pg/text@1']['input'];
       readonly isActive: CodecTypes['pg/bool@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -373,8 +369,6 @@ export type StorageColumnTypes = {
       readonly description: CodecTypes['pg/text@1']['output'] | null;
       readonly id: Char<36>;
       readonly isActive: CodecTypes['pg/bool@1']['output'];
-      readonly isFreeTrial: CodecTypes['pg/bool@1']['output'];
-      readonly nextBillingDate: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly price: CodecTypes['pg/float8@1']['output'];
       readonly title: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -427,8 +421,6 @@ export type StorageColumnInputTypes = {
       readonly description: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['sql/char@1']['input'];
       readonly isActive: CodecTypes['pg/bool@1']['input'];
-      readonly isFreeTrial: CodecTypes['pg/bool@1']['input'];
-      readonly nextBillingDate: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly price: CodecTypes['pg/float8@1']['input'];
       readonly title: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -476,8 +468,6 @@ export namespace Models {
     description: CodecTypes['pg/text@1']['output'] | null;
     category: CodecTypes['pg/text@1']['output'];
     billingCycle: CodecTypes['pg/text@1']['output'];
-    isFreeTrial: CodecTypes['pg/bool@1']['output'];
-    nextBillingDate: CodecTypes['pg/timestamptz-string@1']['output'];
     currency: CodecTypes['pg/text@1']['output'];
     isActive: CodecTypes['pg/bool@1']['output'];
     createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -660,20 +650,6 @@ type ContractBase = Omit<
                 readonly billingCycle: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly isFreeTrial: {
-                  readonly nativeType: 'bool';
-                  readonly codecId: 'pg/bool@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
-                  };
-                };
-                readonly nextBillingDate: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                 };
                 readonly currency: {
@@ -998,17 +974,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly isFreeTrial: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
-              };
-              readonly nextBillingDate: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
               readonly currency: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -1044,8 +1009,6 @@ type ContractBase = Omit<
                 readonly description: { readonly column: 'description' };
                 readonly category: { readonly column: 'category' };
                 readonly billingCycle: { readonly column: 'billingCycle' };
-                readonly isFreeTrial: { readonly column: 'isFreeTrial' };
-                readonly nextBillingDate: { readonly column: 'nextBillingDate' };
                 readonly currency: { readonly column: 'currency' };
                 readonly isActive: { readonly column: 'isActive' };
                 readonly createdAt: { readonly column: 'createdAt' };

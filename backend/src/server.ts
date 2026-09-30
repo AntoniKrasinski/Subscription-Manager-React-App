@@ -18,7 +18,7 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res) => {
-  res.send({ hello: "world" });
+  res.json({hello: "world"})
 });
 
 app.use("/auth", authRoutes);

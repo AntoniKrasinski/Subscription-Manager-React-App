@@ -19,7 +19,6 @@ export interface Subscription {
   category: string;
   currency: Currency;
   isFreeTrial: boolean;
-  freeTrialEnd: string | null;
   nextBillingDate: string | null;
   autopayment: boolean;
 }
@@ -31,8 +30,7 @@ export interface CreateSubscription {
   category: string;
   currency: Currency;
   isFreeTrial?: boolean;
-  freeTrialEnd?: string | null;
-  nextBillingDate?: string | null;
+  nextBillingDate: string | null;
   autopayment?: boolean;
 }
 
@@ -43,7 +41,6 @@ export interface UpdateSubscription {
   category?: string;
   currency?: Currency;
   isFreeTrial?: boolean;
-  freeTrialEnd?: string | null;
   nextBillingDate?: string | null;
   autopayment?: boolean;
 }

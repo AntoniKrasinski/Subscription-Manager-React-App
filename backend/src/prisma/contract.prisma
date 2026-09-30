@@ -12,17 +12,19 @@ model RefreshToken {
 }
 
 model Subscription {
-  id           Char(36)           @id(map: "Subscription_pkey") @default(uuid())
-  userId       Char(36)
-  price        Float
-  title        String
-  description  String?
-  category     String
-  billingCycle String
-  currency      String
-  isActive     Boolean            @default(true)
-  createdAt    TimestamptzString           @default(now())
-  updatedAt    TimestamptzString  @default(now())
+  id              Char(36)           @id(map: "Subscription_pkey") @default(uuid())
+  userId          Char(36)
+  price           Float
+  title           String
+  description     String?
+  category        String
+  billingCycle    String
+  isFreeTrial     Boolean            @default(false)
+  nextBillingDate TimestamptzString
+  currency        String
+  isActive        Boolean            @default(true)
+  createdAt       TimestamptzString  @default(now())
+  updatedAt       TimestamptzString  @default(now())
 
 
   @@check(expression: "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "Subscription_currency_check_f9dd20e4")
@@ -40,7 +42,7 @@ model User {
 model UserPreferences {
   id            Char(36)           @id(map: "UserPreferences_pkey") @default(uuid())
   createdAt     TimestamptzString  @default(now())
-  currency       String
+  currency      String
   language      String             @default("en")
   monthlyBudget Float?
   reminders     Boolean
@@ -53,3 +55,11 @@ model UserPreferences {
   @@check(expression: "(language = ANY (ARRAY['pl'::text, 'en'::text]))", map: "UserPreferences_language_check_a3491bd7")
   @@check(expression: "(theme = ANY (ARRAY['light'::text, 'dark'::text]))", map: "UserPreferences_theme_check_753234b6")
 }
+
+model CurrencyExchanges {
+  createdAt     TimestamptzString  @default(now())
+  currency      String
+  rates         Float
+  effectiveDate TimestamptzString
+}
+

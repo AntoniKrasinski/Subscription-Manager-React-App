@@ -19,7 +19,6 @@ export const getPreferences = async (req: Request, res: Response) => {
   if (!preferences) {
     res.status(404).json({ error: "User preferences not found." });
   }
-  console.log(preferences);
   res.status(200).json({ status: "success", data: preferences });
 };
 

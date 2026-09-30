@@ -19,7 +19,6 @@ const AddSubscriptionForm = ({
     category: "",
     currency: "pln",
     isFreeTrial: false,
-    freeTrialEnd: null,
     nextBillingDate: null,
   });
 
@@ -135,31 +134,22 @@ const AddSubscriptionForm = ({
             onChange={handleChange}
           />
         </div>
-        {subscriptionData.isFreeTrial ? (
-          <div className="formField">
-            <label htmlFor="freeTrialEnd">Koniec okresu próbnego</label>
-            <input
-              id="freeTrialEnd"
-              name="freeTrialEnd"
-              type="date"
-              value={subscriptionData.freeTrialEnd?.toString() ?? ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ) : (
-          <div className="formField">
-            <label htmlFor="nextBillingDate">Następna płatność</label>
-            <input
-              id="nextBillingDate"
-              name="nextBillingDate"
-              type="date"
-              value={subscriptionData.nextBillingDate?.toString() ?? ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        )}
+
+        <div className="formField">
+          <label htmlFor="nextBillingDate">
+            {subscriptionData.isFreeTrial
+              ? "Koniec okresu próbnego"
+              : "Data następnej płatności"}
+          </label>
+          <input
+            id="nextBillingDate"
+            name="nextBillingDate"
+            type="date"
+            value={subscriptionData.nextBillingDate?.toString() ?? ""}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
         <button type="submit" disabled={addSubscriptionMutation.isPending}>
           {addSubscriptionMutation.isPending
