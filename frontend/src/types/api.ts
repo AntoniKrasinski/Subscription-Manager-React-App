@@ -10,6 +10,22 @@ export interface AuthResponse {
 
 type BillingCycle = "weekly" | "monthly" | "yearly";
 type Currency = "pln" | "usd";
+// type SubscriptionCategory =
+//   | "streaming"
+//   | "music"
+//   | "gaming"
+//   | "software"
+//   | "cloud_storage"
+//   | "news"
+//   | "education"
+//   | "fitness"
+//   | "finance"
+//   | "shopping"
+//   | "productivity"
+//   | "food"
+//   | "transport"
+//   | "communication"
+//   | "other";
 
 export interface Subscription {
   id: string;
