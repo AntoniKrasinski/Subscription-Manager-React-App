@@ -6,6 +6,8 @@ import statsRoutes from "./routes/statsRouter.ts";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { db } from "./prisma/db.ts";
+//jobs
+import "./jobs/dailyJobs.ts";
 
 const PORT = process.env.PORT;
 const FRONTEND_URL = process.env.FRONTEND_URL;
