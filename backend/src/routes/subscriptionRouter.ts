@@ -5,6 +5,7 @@ import {
   getSubscription,
   editSubscription,
   deleteSubscription,
+  getLogo,
 } from "../controllers/subscriptionController";
 import { authMiddleware } from "../middleware/authMiddleware";
 
@@ -15,9 +16,9 @@ router.use(authMiddleware);
 router.post("/", addSubscription);
 router.get("/", getAllSubscriptions);
 
-
 router.get("/:id", getSubscription);
 router.patch("/:id", editSubscription);
 router.delete("/:id", deleteSubscription);
+router.get("/logo/:name", getLogo);
 
 export default router;

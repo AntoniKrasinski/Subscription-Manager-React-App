@@ -3,6 +3,8 @@ import { useGetAllSubscriptions } from "../api/getSubscriptions";
 import { useDeleteSubscription } from "../api/deleteSubscription";
 import EditSubscriptionButton from "./EditSubscriptionButton";
 import { getDaysUntil } from "../../../utils/getDaysUntl";
+import ShowLogo from "./ShowLogo";
+
 const SubscriptionsList = () => {
   const {
     data: userSubscriptions,
@@ -25,9 +27,10 @@ const SubscriptionsList = () => {
         {userSubscriptions.length === 0 ? (
           "add first subscription"
         ) : (
-          <table className="w-full  ">
+          <table className="w-full ">
             <thead>
               <tr>
+                <th></th>
                 <th>
                   <button>
                     Nazwa <span className="sort-icon">&#9650;</span>
@@ -60,6 +63,12 @@ const SubscriptionsList = () => {
             <tbody>
               {userSubscriptions.map((subscription) => (
                 <tr key={subscription.id}>
+                  <td>
+                    <ShowLogo
+                      name={subscription.title}
+                      showImage={subscription.showImage}
+                    />
+                  </td>
                   <td>{subscription.title}</td>
                   <td>{subscription.category}</td>
                   <td className="price" data-value="43">

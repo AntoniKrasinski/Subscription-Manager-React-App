@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Subscription, UpdateSubscription } from "../../../types/api";
 import { useUpdateSubscription } from "../api/updateSubscription";
 import ModalLayout from "../../../components/layouts/ModalLayout";
+import AddLogo from "./AddLogo";
 
 const EditSubscriptionForm = ({
   subscription,
@@ -15,6 +16,7 @@ const EditSubscriptionForm = ({
   const [subscriptionData, setSubscriptionData] = useState<UpdateSubscription>({
     price: subscription.price,
     title: subscription.title,
+    showImage: subscription.showImage,
     billingCycle: subscription.billingCycle,
     category: subscription.category,
     currency: subscription.currency,
@@ -50,7 +52,9 @@ const EditSubscriptionForm = ({
       data: subscriptionData,
     });
   };
-
+  useEffect(() => {
+    console.log(subscriptionData);
+  });
   return (
     <ModalLayout onClick={() => setIsOpen(false)}>
       <div className="flex justify-between">
@@ -62,17 +66,28 @@ const EditSubscriptionForm = ({
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="formField">
-          <label htmlFor="title">Nazwa subskrypcji</label>
-
-          <input
-            id="title"
-            name="title"
-            type="text"
-            value={subscriptionData.title ?? ""}
-            onChange={handleChange}
-            placeholder="np. Netflix"
-            required
+        <div className="flex">
+          <div className="formField">
+            <label htmlFor="title">Nazwa subskrypcji</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              value={subscriptionData.title ?? ""}
+              onChange={handleChange}
+              placeholder="np. Netflix"
+              required
+            />
+          </div>
+          <AddLogo
+            name={subscriptionData.title!}
+            showImage={subscriptionData.showImage!}
+            setShowImage={(showImage) =>
+              setSubscriptionData((prev) => ({
+                ...prev,
+                showImage,
+              }))
+            }
           />
         </div>
 

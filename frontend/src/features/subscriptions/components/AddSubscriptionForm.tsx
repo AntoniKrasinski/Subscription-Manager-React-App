@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import type { CreateSubscription } from "../../../types/api";
 import { useAddSubscription } from "../api/addSubscription";
 import ModalLayout from "../../../components/layouts/ModalLayout";
+import AddLogo from "./AddLogo";
 const AddSubscriptionForm = ({
   setIsOpen,
 }: {
@@ -15,8 +16,9 @@ const AddSubscriptionForm = ({
   const [subscriptionData, setSubscriptionData] = useState<CreateSubscription>({
     price: 0.0,
     title: "",
+    showImage: true,
     billingCycle: "monthly",
-    category: "",
+    category: "other",
     currency: "pln",
     isFreeTrial: false,
     nextBillingDate: null,
@@ -56,16 +58,29 @@ const AddSubscriptionForm = ({
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="formField">
-          <label htmlFor="title">Nazwa subskrypcji</label>
-          <input
-            id="title"
-            name="title"
-            type="text"
-            value={subscriptionData.title}
-            onChange={handleChange}
-            placeholder="np. Netflix"
-            required
+        <div className="flex">
+          <div className="formField">
+            <label htmlFor="title">Nazwa subskrypcji</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              value={subscriptionData.title}
+              onChange={handleChange}
+              placeholder="np. Netflix"
+              required
+            />
+          </div>
+
+          <AddLogo
+            name={subscriptionData.title}
+            showImage={subscriptionData.showImage}
+            setShowImage={(showImage) =>
+              setSubscriptionData((prev) => ({
+                ...prev,
+                showImage,
+              }))
+            }
           />
         </div>
 
@@ -113,15 +128,21 @@ const AddSubscriptionForm = ({
 
         <div className="formField">
           <label htmlFor="category">Kategoria</label>
-          <input
+
+          <select
             id="category"
             name="category"
-            type="text"
             value={subscriptionData.category}
             onChange={handleChange}
-            placeholder="np. Rozrywka"
             required
-          />
+          >
+            <option value="entertainment">Entertainment</option>
+            <option value="music">Music</option>
+            <option value="software">Software</option>
+            <option value="education">Education</option>
+            <option value="fitness">Fitness</option>
+            <option value="other">Other</option>
+          </select>
         </div>
 
         <div className="formFieldChckbox">

@@ -10,29 +10,21 @@ export interface AuthResponse {
 
 type BillingCycle = "weekly" | "monthly" | "yearly";
 type Currency = "pln" | "usd";
-// type SubscriptionCategory =
-//   | "streaming"
-//   | "music"
-//   | "gaming"
-//   | "software"
-//   | "cloud_storage"
-//   | "news"
-//   | "education"
-//   | "fitness"
-//   | "finance"
-//   | "shopping"
-//   | "productivity"
-//   | "food"
-//   | "transport"
-//   | "communication"
-//   | "other";
+export type SubscriptionCategory =
+  | "entertainment"
+  | "music"
+  | "software"
+  | "education"
+  | "fitness"
+  | "other";
 
 export interface Subscription {
   id: string;
   price: number;
+  showImage: boolean;
   title: string;
   billingCycle: BillingCycle;
-  category: string;
+  category: SubscriptionCategory;
   currency: Currency;
   isFreeTrial: boolean;
   nextBillingDate: string;
@@ -42,8 +34,9 @@ export interface Subscription {
 export interface CreateSubscription {
   price: number;
   title: string;
+  showImage: boolean;
   billingCycle: BillingCycle;
-  category: string;
+  category: SubscriptionCategory;
   currency: Currency;
   isFreeTrial?: boolean;
   nextBillingDate: string | null;
@@ -53,6 +46,7 @@ export interface CreateSubscription {
 export interface UpdateSubscription {
   price?: number;
   title?: string;
+  showImage?: boolean;
   billingCycle?: BillingCycle;
   category?: string;
   currency?: Currency;

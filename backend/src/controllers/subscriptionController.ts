@@ -1,14 +1,19 @@
 import { db } from "../prisma/db.ts";
-import type { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { Char } from "@prisma/orm-postgres/target/codec-types";
+import axios from "axios";
 
 interface SubscriptionParams {
   id: Char<36>;
+}
+interface LogoParmas {
+  name: string;
 }
 
 export const addSubscription = async (req: Request, res: Response) => {
   const {
     price,
+    showImage,
     title,
     description,
     billingCycle,
@@ -21,6 +26,7 @@ export const addSubscription = async (req: Request, res: Response) => {
   const { user } = req;
   await db.orm.public.Subscription.create({
     userId: user.id,
+    showImage,
     price,
     title,
     description,
@@ -109,6 +115,7 @@ export const editSubscription = async (
 
   const {
     title,
+    showImage,
     price,
     description,
     billingCycle,
@@ -123,6 +130,7 @@ export const editSubscription = async (
     id: req.params.id,
   }).update({
     title,
+    showImage,
     price,
     description,
     billingCycle,
@@ -135,4 +143,15 @@ export const editSubscription = async (
   res
     .status(200)
     .json({ status: "success", message: "Subscription successfully updated." });
+};
+
+export const getLogo = async (req: Request<LogoParmas>, res: Response) => {
+  const imageUrl = `https://img.logo.dev/name/${encodeURIComponent(req.params.name)}?token=${process.env.LOGO_DEV_TOKEN}&size=96&format=webp&theme=dark&retina=true`;
+  try {
+    const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
+    res.set("Content-Type", "image/webp");
+    res.status(200).send(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch logo." });
+  }
 };

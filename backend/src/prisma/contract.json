@@ -242,6 +242,13 @@
                   "kind": "scalar"
                 }
               },
+              "showImage": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "title": {
                 "nullable": false,
                 "type": {
@@ -299,6 +306,9 @@
                 },
                 "price": {
                   "column": "price"
+                },
+                "showImage": {
+                  "column": "showImage"
                 },
                 "title": {
                   "column": "title"
@@ -687,6 +697,11 @@
                   "nativeType": "float8",
                   "nullable": false
                 },
+                "showImage": {
+                  "codecId": "pg/bool@1",
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "title": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -886,7 +901,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "11f68b5b94d443b3ef9176709c4c7939e4e54853f7a232da7fe803a4f2981a23"
+    "storageHash": "02b234c9770edc495f2975749e9ff3c8d17ffb07207b65c0629ba5a1766fb0a8"
   },
   "execution": {
     "executionHash": "95513ebb6f15a58c8775ad792d7269ef05dec6af14c220dab83ddc2441509bc1",

@@ -16,6 +16,7 @@ model Subscription {
   userId          Char(36)
   price           Float
   title           String
+  showImage       Boolean
   description     String?
   category        String
   billingCycle    String
