@@ -16,6 +16,10 @@
       "model": "Subscription",
       "namespace": "public"
     },
+    "subscriptionsHistory": {
+      "model": "SubscriptionsHistory",
+      "namespace": "public"
+    },
     "user": {
       "model": "User",
       "namespace": "public"
@@ -52,7 +56,17 @@
                   "kind": "scalar"
                 }
               },
-              "rates": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "rate": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/float8@1",
@@ -72,8 +86,11 @@
                 "effectiveDate": {
                   "column": "effectiveDate"
                 },
-                "rates": {
-                  "column": "rates"
+                "id": {
+                  "column": "id"
+                },
+                "rate": {
+                  "column": "rate"
                 }
               },
               "namespaceId": "public",
@@ -197,13 +214,6 @@
                   "kind": "scalar"
                 }
               },
-              "description": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -274,7 +284,23 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "subscriptionsHistory": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "subscriptionId"
+                  ]
+                },
+                "to": {
+                  "model": "SubscriptionsHistory",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "billingCycle": {
@@ -288,9 +314,6 @@
                 },
                 "currency": {
                   "column": "currency"
-                },
-                "description": {
-                  "column": "description"
                 },
                 "id": {
                   "column": "id"
@@ -322,6 +345,110 @@
               },
               "namespaceId": "public",
               "table": "subscription"
+            }
+          },
+          "SubscriptionsHistory": {
+            "fields": {
+              "billingDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "currency": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "price": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "subscriptionId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "subscription": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "subscriptionId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Subscription",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "billingDate": {
+                  "column": "billingDate"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "currency": {
+                  "column": "currency"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "price": {
+                  "column": "price"
+                },
+                "subscriptionId": {
+                  "column": "subscriptionId"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "subscriptionsHistory"
             }
           },
           "User": {
@@ -545,7 +672,15 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
-                "rates": {
+                "id": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "rate": {
                   "codecId": "pg/float8@1",
                   "nativeType": "float8",
                   "nullable": false
@@ -553,6 +688,12 @@
               },
               "foreignKeys": [],
               "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "CurrencyExchanges_pkey"
+              },
               "uniques": []
             },
             "refreshToken": {
@@ -656,11 +797,6 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "description": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
-                },
                 "id": {
                   "codecId": "sql/char@1",
                   "nativeType": "character",
@@ -732,6 +868,94 @@
                   "id"
                 ],
                 "name": "Subscription_pkey"
+              },
+              "uniques": []
+            },
+            "subscriptionsHistory": {
+              "columns": {
+                "billingDate": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "currency": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "price": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": false
+                },
+                "subscriptionId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "subscriptionId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "subscriptionsHistory"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "subscription"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "subscriptionId"
+                  ],
+                  "name": "subscriptionsHistory_subscriptionId_idx_edbe96bf",
+                  "prefix": "subscriptionsHistory_subscriptionId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "SubscriptionsHistory_pkey"
               },
               "uniques": []
             },
@@ -893,7 +1117,13 @@
                 ],
                 "name": "UserPreferences_pkey"
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "userId"
+                  ]
+                }
+              ]
             }
           }
         },
@@ -901,12 +1131,23 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "02b234c9770edc495f2975749e9ff3c8d17ffb07207b65c0629ba5a1766fb0a8"
+    "storageHash": "99663ef0cdbb3ee2aafdbdaaeb93632cbc0d0f29125b429526bc2ba827ce62c3"
   },
   "execution": {
-    "executionHash": "95513ebb6f15a58c8775ad792d7269ef05dec6af14c220dab83ddc2441509bc1",
+    "executionHash": "ec16d72bbe697cfe4effb11316cd1112ce14e58e70681c51a3be4db129c65a00",
     "mutations": {
       "defaults": [
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "currencyExchanges"
+          }
+        },
         {
           "onCreate": {
             "id": "uuidv4",
@@ -927,6 +1168,17 @@
             "column": "id",
             "namespace": "public",
             "table": "subscription"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "subscriptionsHistory"
           }
         },
         {

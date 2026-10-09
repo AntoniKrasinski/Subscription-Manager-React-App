@@ -11,28 +11,30 @@ const getExchangeRate = async (currency: string) => {
     effectiveDate: today.toISOString(),
   }).first();
   if (cachedCurrency) {
-    return cachedCurrency.rates;
+    return cachedCurrency.rate;
   }
   const response = await axios.get(
     `https://api.nbp.pl/api/exchangerates/rates/c/${currency}/today/`,
   );
-  let { bid: rates, effectiveDate } = response.data.rates[0];
+  let { bid: rate, effectiveDate } = response.data.rates[0];
   effectiveDate = new Date(effectiveDate);
   await db.orm.public.CurrencyExchanges.create({
     currency,
     effectiveDate,
-    rates,
+    rate,
   });
-  return rates;
+  return rate;
 };
 
-export const currencyExchange = async (
-  subscriptions: Subscription[],
-): Promise<Subscription[]> => {
+export const currencyExchange = async <
+  T extends { currency: string; price: number },
+>(
+  subscriptions: T[],
+  userId: Char<36>,
+): Promise<T[]> => {
   if (subscriptions.length === 0) {
     return [];
   }
-  const userId = subscriptions[0].userId as Char<36>;
 
   const preferences = await db.orm.public.UserPreferences.where({
     userId,

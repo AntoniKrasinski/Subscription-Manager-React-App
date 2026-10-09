@@ -7,20 +7,23 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
   const { user } = req;
+
   const userSubscriptions = await db.orm.public.Subscription.where({
     userId: user.id,
   }).all();
+
   let activeSubscriptions = userSubscriptions.filter(
-    (e) => e.isActive === true && e.isFreeTrial === false,
+    (e) => e.isActive && !e.isFreeTrial,
   );
-  const activeSubscriptionsCount = activeSubscriptions.length;
 
-  const subscriptionsWithUserCurrency =
-    await currencyExchange(activeSubscriptions);
+  const subscriptionsWithUserCurrency = await currencyExchange(
+    activeSubscriptions,
+    user.id,
+  );
 
-  const thisMonthSpending = subscriptionsWithUserCurrency.reduce(
+  let thisMonthSpending = subscriptionsWithUserCurrency.reduce(
     (total, subscription) => {
-      const billingDate = new Date(subscription.nextBillingDate as string);
+      const billingDate = new Date(subscription.nextBillingDate);
 
       if (subscription.billingCycle === "weekly") {
         while (
@@ -57,6 +60,37 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
     0,
   );
 
+  const now = new Date();
+  const startOfMonth = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1,
+  ).toISOString();
+
+  const startOfNextMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    1,
+  ).toISOString();
+
+  const paidInThisMounth = await db.orm.public.SubscriptionsHistory.include(
+    "subscription",
+    (s) => s.where({ userId: user.id }),
+  )
+    .where(
+      (h) =>
+        h.billingDate.gte(startOfMonth) && h.billingDate.lt(startOfNextMonth),
+    )
+    .all();
+  const paidInThisMounthWithUserCurrency = await currencyExchange(
+    paidInThisMounth,
+    user.id,
+  );
+thisMonthSpending = paidInThisMounthWithUserCurrency.reduce(
+  (total, paid) => total + paid.price,
+  thisMonthSpending,
+);
+
   const yearlySpending = subscriptionsWithUserCurrency.reduce(
     (total, subscription) => {
       switch (subscription.billingCycle) {
@@ -75,6 +109,8 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
     },
     0,
   );
+
+  const activeSubscriptionsCount = activeSubscriptions.length;
 
   res.status(200).json({
     status: "success",

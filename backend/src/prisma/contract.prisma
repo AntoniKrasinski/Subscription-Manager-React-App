@@ -1,5 +1,14 @@
 // use prisma-8
-// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+//  `npx prisma contract emit`.
+
+model User {
+  id           Char(36)           @id(map: "User_pkey") @default(uuid())
+  createdAt    TimestamptzString  @default(now())
+  email        String             @unique(map: "User_email_key")
+  name         String
+  updatedAt    TimestamptzString  @default(now())
+  passwordHash String
+}
 
 model RefreshToken {
   id        Char(36)            @id(map: "RefreshToken_pkey") @default(uuid())
@@ -12,33 +21,39 @@ model RefreshToken {
 }
 
 model Subscription {
-  id              Char(36)           @id(map: "Subscription_pkey") @default(uuid())
-  userId          Char(36)
-  price           Float
-  title           String
-  showImage       Boolean
-  description     String?
-  category        String
-  billingCycle    String
-  isFreeTrial     Boolean            @default(false)
-  nextBillingDate TimestamptzString
-  currency        String
-  isActive        Boolean            @default(true)
-  createdAt       TimestamptzString  @default(now())
-  updatedAt       TimestamptzString  @default(now())
+  id                   Char(36)                @id(map: "Subscription_pkey") @default(uuid())
+  userId               Char(36)
+  price                Float
+  title                String
+  showImage            Boolean
+  category             String
+  billingCycle         String
+  isFreeTrial          Boolean                 @default(false)
+  nextBillingDate      TimestamptzString
+  currency             String
+  isActive             Boolean                 @default(true)
+  createdAt            TimestamptzString       @default(now())
+  updatedAt            TimestamptzString       @default(now())
+
+  subscriptionsHistory SubscriptionsHistory[]
 
 
   @@check(expression: "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "Subscription_currency_check_f9dd20e4")
 }
 
-model User {
-  id           Char(36)           @id(map: "User_pkey") @default(uuid())
-  createdAt    TimestamptzString  @default(now())
-  email        String             @unique(map: "User_email_key")
-  name         String
-  updatedAt    TimestamptzString  @default(now())
-  passwordHash String
+model SubscriptionsHistory {
+  id             Char(36)           @id(map: "SubscriptionsHistory_pkey") @default(uuid())
+  price          Float
+  currency       String
+  billingDate    TimestamptzString
+  createdAt      TimestamptzString  @default(now())
+  updatedAt      TimestamptzString  @default(now())
+
+  subscriptionId Char(36)
+  subscription   Subscription      @relation(fields: [subscriptionId], references: [id])
 }
+
+
 
 model UserPreferences {
   id            Char(36)           @id(map: "UserPreferences_pkey") @default(uuid())
@@ -50,7 +65,7 @@ model UserPreferences {
   theme         String             @default("light")
   timezone      String
   updatedAt     TimestamptzString  @default(now())
-  userId        Char(36)
+  userId        Char(36)           @unique
 
   @@check(expression: "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "UserPreferences_currency_check_f9dd20e4")
   @@check(expression: "(language = ANY (ARRAY['pl'::text, 'en'::text]))", map: "UserPreferences_language_check_a3491bd7")
@@ -58,9 +73,10 @@ model UserPreferences {
 }
 
 model CurrencyExchanges {
-  createdAt     TimestamptzString  @default(now())
+  id            Char(36)           @id(map: "CurrencyExchanges_pkey") @default(uuid())
   currency      String
-  rates         Float
+  rate          Float
   effectiveDate TimestamptzString
+  createdAt     TimestamptzString  @default(now())
 }
 

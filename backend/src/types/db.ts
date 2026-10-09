@@ -1,3 +1,5 @@
+
+
 export type Language = "pl" | "en";
 
 export type Theme = "light" | "dark";
@@ -7,7 +9,6 @@ export interface Subscription {
   userId: string;
   price: number;
   title: string;
-  description: string | null;
   category: string;
   billingCycle: string;
   nextBillingDate: string;

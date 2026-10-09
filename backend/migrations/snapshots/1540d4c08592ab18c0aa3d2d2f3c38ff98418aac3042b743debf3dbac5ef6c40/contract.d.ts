@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'99663ef0cdbb3ee2aafdbdaaeb93632cbc0d0f29125b429526bc2ba827ce62c3'>;
+  StorageHashBase<'1540d4c08592ab18c0aa3d2d2f3c38ff98418aac3042b743debf3dbac5ef6c40'>;
 export type ExecutionHash =
   ExecutionHashBase<'ec16d72bbe697cfe4effb11316cd1112ce14e58e70681c51a3be4db129c65a00'>;
 export type ProfileHash =
@@ -275,12 +275,12 @@ export type FieldOutputTypes = {
     };
     readonly SubscriptionsHistory: {
       readonly id: Char<36>;
+      readonly subscriptionId: Char<36>;
       readonly price: CodecTypes['pg/float8@1']['output'];
       readonly currency: CodecTypes['pg/text@1']['output'];
       readonly billingDate: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly subscriptionId: Char<36>;
     };
     readonly User: {
       readonly id: Char<36>;
@@ -339,12 +339,12 @@ export type FieldInputTypes = {
     };
     readonly SubscriptionsHistory: {
       readonly id: CodecTypes['sql/char@1']['input'];
+      readonly subscriptionId: CodecTypes['sql/char@1']['input'];
       readonly price: CodecTypes['pg/float8@1']['input'];
       readonly currency: CodecTypes['pg/text@1']['input'];
       readonly billingDate: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly subscriptionId: CodecTypes['sql/char@1']['input'];
     };
     readonly User: {
       readonly id: CodecTypes['sql/char@1']['input'];
@@ -531,19 +531,17 @@ export namespace Models {
     isActive: CodecTypes['pg/bool@1']['output'];
     createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
     updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
-    subscriptionsHistory: public_SubscriptionsHistory[];
-    readonly [RelationKeys]?: 'subscriptionsHistory';
+    readonly [RelationKeys]?: never;
   };
   export type public_SubscriptionsHistory = {
     id: Char<36>;
+    subscriptionId: Char<36>;
     price: CodecTypes['pg/float8@1']['output'];
     currency: CodecTypes['pg/text@1']['output'];
     billingDate: CodecTypes['pg/timestamptz-string@1']['output'];
     createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
     updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
-    subscriptionId: Char<36>;
-    subscription: public_Subscription;
-    readonly [RelationKeys]?: 'subscription';
+    readonly [RelationKeys]?: never;
   };
   export type public_UserPreferences = {
     id: Char<36>;
@@ -780,6 +778,12 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly typeParams: { readonly length: 36 };
                 };
+                readonly subscriptionId: {
+                  readonly nativeType: 'character';
+                  readonly codecId: 'sql/char@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 36 };
+                };
                 readonly price: {
                   readonly nativeType: 'float8';
                   readonly codecId: 'pg/float8@1';
@@ -807,40 +811,14 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
-                readonly subscriptionId: {
-                  readonly nativeType: 'character';
-                  readonly codecId: 'sql/char@1';
-                  readonly nullable: false;
-                  readonly typeParams: { readonly length: 36 };
-                };
               };
               primaryKey: {
                 readonly columns: readonly ['id'];
                 readonly name: 'SubscriptionsHistory_pkey';
               };
               uniques: readonly [];
-              indexes: readonly [
-                {
-                  readonly name: 'subscriptionsHistory_subscriptionId_idx_edbe96bf';
-                  readonly prefix: 'subscriptionsHistory_subscriptionId_idx';
-                  readonly columns: readonly ['subscriptionId'];
-                  readonly unique: false;
-                },
-              ];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'subscriptionsHistory';
-                    readonly columns: readonly ['subscriptionId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'subscription';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-              ];
+              indexes: readonly [];
+              foreignKeys: readonly [];
             };
             readonly user: {
               columns: {
@@ -1179,19 +1157,7 @@ type ContractBase = Omit<
                 };
               };
             };
-            readonly relations: {
-              readonly subscriptionsHistory: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'SubscriptionsHistory';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['subscriptionId'];
-                };
-              };
-            };
+            readonly relations: Record<string, never>;
             readonly storage: {
               readonly table: 'subscription';
               readonly namespaceId: 'public';
@@ -1215,6 +1181,14 @@ type ContractBase = Omit<
           readonly SubscriptionsHistory: {
             readonly fields: {
               readonly id: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/char@1';
+                  readonly typeParams: { readonly length: 36 };
+                };
+              };
+              readonly subscriptionId: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
@@ -1251,40 +1225,19 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
-              readonly subscriptionId: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/char@1';
-                  readonly typeParams: { readonly length: 36 };
-                };
-              };
             };
-            readonly relations: {
-              readonly subscription: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Subscription';
-                };
-                readonly cardinality: 'N:1';
-                readonly nullable: false;
-                readonly on: {
-                  readonly localFields: readonly ['subscriptionId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
+            readonly relations: Record<string, never>;
             readonly storage: {
               readonly table: 'subscriptionsHistory';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
+                readonly subscriptionId: { readonly column: 'subscriptionId' };
                 readonly price: { readonly column: 'price' };
                 readonly currency: { readonly column: 'currency' };
                 readonly billingDate: { readonly column: 'billingDate' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
-                readonly subscriptionId: { readonly column: 'subscriptionId' };
               };
             };
           };
