@@ -86,10 +86,10 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
     paidInThisMounth,
     user.id,
   );
-thisMonthSpending = paidInThisMounthWithUserCurrency.reduce(
-  (total, paid) => total + paid.price,
-  thisMonthSpending,
-);
+  thisMonthSpending = paidInThisMounthWithUserCurrency.reduce(
+    (total, paid) => total + paid.price,
+    thisMonthSpending,
+  );
 
   const yearlySpending = subscriptionsWithUserCurrency.reduce(
     (total, subscription) => {
@@ -117,6 +117,7 @@ thisMonthSpending = paidInThisMounthWithUserCurrency.reduce(
     data: {
       activeSubscriptionsCount,
       thisMonthSpending: thisMonthSpending.toFixed(2),
+      monthlySpending: (yearlySpending / 12).toFixed(2),
       yearlySpending: yearlySpending.toFixed(2),
     },
   });

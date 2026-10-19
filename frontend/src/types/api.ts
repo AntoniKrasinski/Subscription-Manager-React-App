@@ -62,5 +62,6 @@ export interface UserPreferences {
 export interface SubscriptionsStats {
   activeSubscriptionsCount: string;
   thisMonthSpending: string;
+  monthlySpending: string;
   yearlySpending: string;
 }

@@ -2,25 +2,22 @@ import React from "react";
 
 export interface CardProps {
   title: string;
-  data: string;
-  subTitle: string;
-  children: React.ReactNode;
+  action?: React.ReactNode; // np. link "View all →"
+  children?: React.ReactNode;
   className?: string;
 }
-const Card = ({ title, data, subTitle, children, className }: CardProps) => {
+
+const Card = ({ title, action, children, className = "" }: CardProps) => {
   return (
-    <div
-      className={` flex flex-col justify-start text-left items-start p-4 w-full border rounded-2xl ${className}`}
+    <section
+      className={`flex w-full flex-col rounded-2xl border border-border bg-surface p-5 text-left ${className}`}
     >
-      <h3 className="border-b w-full">{title}</h3>
-      <div className="w-full flex justify-between">
-        <div className="">
-          <h2>{data}</h2>
-          <p>{subTitle}</p>
-        </div>
-        {children}
+      <div className="mb-3.5 flex items-center justify-between gap-3">
+        <h2 className="m-0">{title}</h2>
+        {action}
       </div>
-    </div>
+      {children}
+    </section>
   );
 };
 

@@ -14,9 +14,10 @@ const getExchangeRate = async (currency: string) => {
     return cachedCurrency.rate;
   }
   const response = await axios.get(
-    `https://api.nbp.pl/api/exchangerates/rates/c/${currency}/today/`,
+    `https://api.nbp.pl/api/exchangerates/rates/a/${currency}/`,
   );
-  let { bid: rate, effectiveDate } = response.data.rates[0];
+
+  let { mid: rate, effectiveDate } = response.data.rates[0];
   effectiveDate = new Date(effectiveDate);
   await db.orm.public.CurrencyExchanges.create({
     currency,
