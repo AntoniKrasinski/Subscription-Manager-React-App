@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "../../../components/UI/Button";
 import EditSubscriptionForm from "./EditSubscriptionForm";
 import { useState } from "react";
 import type { Subscription } from "../../../types/api";
@@ -17,13 +16,13 @@ const EditSubscriptionButton = ({
           subscription={subscription}
         />
       )}
-      <Button
+      <button className="min-h-9 cursor-pointer rounded-xl border-0 bg-primary-soft px-4 py-2 text-primary"
         onClick={() => {
           setIsOpen(true);
         }}
       >
         Edit
-      </Button>
+      </button>
     </>
   );
 };

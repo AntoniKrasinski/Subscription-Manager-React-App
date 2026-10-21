@@ -1,5 +1,3 @@
-import React from "react";
-import Button from "../../../components/UI/Button";
 import AddSubscriptionForm from "./AddSubscriptionForm";
 import { useState } from "react";
 const AddSubscriptionButton = () => {
@@ -7,13 +5,14 @@ const AddSubscriptionButton = () => {
   return (
     <>
       {isOpen && <AddSubscriptionForm setIsOpen={setIsOpen} />}
-      <Button
+      <button
+        className="font-semibold cursor-pointer  rounded-xl border-0 bg-primary px-5 py-3 text-white"
         onClick={() => {
           setIsOpen(true);
         }}
       >
         Add Subscription
-      </Button>
+      </button>
     </>
   );
 };

@@ -8,7 +8,7 @@ interface Props {
 const ShowLogo = ({ name, showImage }: Props) => {
   return (
     <img
-      className="w-16 h-16 bg-[#2E2E2E]"
+      className="w-14 h-14 bg-[#2E2E2E]"
       src={
         showImage
           ? `http://localhost:3000/subscriptions/logo/${name}`

@@ -52,7 +52,7 @@ const AddSubscriptionForm = ({
 
   return (
     <ModalLayout onClick={() => setIsOpen(false)}>
-      <div className="flex justify-between">
+      <div className="flex justify-between ">
         <h2>Dodaj subskrypcję</h2>
         <button onClick={() => setIsOpen(false)}>X</button>
       </div>

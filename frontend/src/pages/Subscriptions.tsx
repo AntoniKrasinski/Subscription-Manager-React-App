@@ -9,7 +9,10 @@ const Subscriptions = () => {
     <ProtectedRoute>
       <AppLayout>
         <div className="flex justify-between items-center">
-          <h2>Subscriptions</h2> <AddSubscriptionButton />
+          <div className="">
+            <h1>Subscriptions</h1>
+            <p>Add and edit your subscriptions</p>
+          </div> <AddSubscriptionButton />
         </div>
         <SubscriptionsList />
       </AppLayout>

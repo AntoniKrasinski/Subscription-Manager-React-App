@@ -14,7 +14,6 @@ const Dashboard = () => {
   const preferences = usePreferences();
   const stats = useGetSubscriptionsStats();
 
-
   return (
     <ProtectedRoute>
       <AppLayout>
@@ -24,7 +23,7 @@ const Dashboard = () => {
           <>
             <div>
               <h1>Welcome, {user.data.name}!</h1>
-              <p>Take control of your subscriptions with SubRiver.</p>
+              <p>Take control of your subscriptions with SubRiver</p>
             </div>
 
             <div className="grid grid-cols-4 grid-rows-1 gap-6">

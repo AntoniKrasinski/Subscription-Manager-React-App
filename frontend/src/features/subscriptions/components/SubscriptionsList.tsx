@@ -4,6 +4,7 @@ import { useDeleteSubscription } from "../api/deleteSubscription";
 import EditSubscriptionButton from "./EditSubscriptionButton";
 import { getDaysUntil } from "../../../utils/getDaysUntl";
 import ShowLogo from "./ShowLogo";
+import { ChevronsUpDown } from "lucide-react";
 
 const SubscriptionsList = () => {
   const {
@@ -14,6 +15,14 @@ const SubscriptionsList = () => {
 
   const deleteMutation = useDeleteSubscription();
 
+  const columns = [
+    "Name",
+    "Category",
+    "Price",
+    "Billing cycle",
+    "Next payment",
+  ];
+
   if (isLoading) {
     return <div>loading...</div>;
   }
@@ -23,85 +32,82 @@ const SubscriptionsList = () => {
 
   return (
     <>
-      <div className="flex  flex-col justify-center text-left p-8 h-full bg-card-bg border">
+      <div className="flex  flex-col justify-center p-8  bg-surface border border-border rounded-xl">
         {userSubscriptions.length === 0 ? (
           "add first subscription"
         ) : (
-          <table className="w-full ">
+          <table className="w-full border-separate border-spacing-y-6">
             <thead>
               <tr>
-                <th></th>
-                <th>
-                  <button>
-                    Nazwa <span className="sort-icon">&#9650;</span>
-                  </button>
+                {columns.map((column) => (
+                  <th key={column} className="px-3 pb-3 text-left">
+                    <button
+                      type="button"
+                      className="sort-button inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0"
+                    >
+                      {column}
+                      <ChevronsUpDown size={12} />
+                    </button>
+                  </th>
+                ))}
+                <th className="px-3 pb-3 text-left">Status</th>
+                <th className="px-3 pb-3">
+                  <span className="sr-only">Actions</span>
                 </th>
-                <th>
-                  <button>
-                    Kategoria <span className="sort-icon">&#9650;</span>
-                  </button>
-                </th>
-                <th>
-                  <button>
-                    Cena <span className="sort-icon">&#9650;</span>
-                  </button>
-                </th>
-                <th>
-                  <button>
-                    Billing cycle <span className="sort-icon">&#9650;</span>
-                  </button>
-                </th>
-
-                <th>
-                  <button>
-                    Następna płatność <span className="sort-icon">&#9650;</span>
-                  </button>
-                </th>
-                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {userSubscriptions.map((subscription) => (
                 <tr key={subscription.id}>
-                  <td>
-                    <ShowLogo
-                      name={subscription.title}
-                      showImage={subscription.showImage}
-                    />
+                  <td className="px-3">
+                    <div className="flex items-center w-full ">
+                      <ShowLogo
+                        name={subscription.title}
+                        showImage={subscription.showImage}
+                      />
+                      <span className="data relative left-8">
+                        {subscription.title}
+                      </span>
+                    </div>
                   </td>
-                  <td>{subscription.title}</td>
-                  <td>{subscription.category}</td>
-                  <td className="price" data-value="43">
+                  <td className="px-3">
+                    <span className="badge bg-primary-soft text-primary-strong rounded-xl py-1 px-2 ">
+                      {subscription.category}
+                    </span>
+                  </td>
+                  <td className="data p-3">
                     {subscription.price} {subscription.currency}
                   </td>
-                  <td>{subscription.billingCycle}</td>
-                  <td>{getDaysUntil(subscription.nextBillingDate)}</td>
-                  <td>
-                    <span className="badge active">{"Active"}</span>
+                  <td className="px-3">{subscription.billingCycle}</td>
+                  <td className="px-3">
+                    <span className="text-text-muted">
+                      {getDaysUntil(subscription.nextBillingDate)}
+                    </span>
                   </td>
-                  <td>
-                    {" "}
-                    <EditSubscriptionButton subscription={subscription} />
+                  <td className="px-3">
+                    <span className="badge bg-success-soft text-success rounded-xl py-1 px-2">
+                      Active
+                    </span>
                   </td>
-                  <td>
-                    {" "}
-                    <button
-                      onClick={() =>
-                        deleteMutation.mutate(subscription.id as string)
-                      }
-                    >
-                      Delete
-                    </button>
+                  <td className="px-3">
+                    <div className="flex items-center justify-end gap-2">
+                      <EditSubscriptionButton subscription={subscription} />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          deleteMutation.mutate(subscription.id as string)
+                        }
+                        className="min-h-9 cursor-pointer rounded-xl border-0 bg-danger-soft px-4 py-2 text-danger"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
-        <div className="">
-          <button>Import</button>
-          <button>Export</button>
-        </div>
       </div>
     </>
   );
