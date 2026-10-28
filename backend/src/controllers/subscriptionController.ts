@@ -82,10 +82,14 @@ export const deleteSubscription = async (
       .status(403)
       .json({ error: "Not allowed to update this subscription" });
   }
-
-  await db.orm.public.Subscription.where({
-    id: req.params.id,
-  }).delete();
+  await db.transaction(async (tx) => {
+    await tx.orm.public.SubscriptionsHistory.where({
+      subscriptionId: req.params.id,
+    }).deleteAll();
+    await tx.orm.public.Subscription.where({
+      id: req.params.id,
+    }).delete();
+  });
 
   res
     .status(200)

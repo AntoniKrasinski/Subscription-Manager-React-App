@@ -1,85 +1,77 @@
-import React, { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import type { CreateSubscription } from "../../../types/api";
 import { useAddSubscription } from "../api/addSubscription";
 import ModalLayout from "../../../components/layouts/ModalLayout";
 import AddLogo from "./AddLogo";
+
+type AddSubscriptionFormValues = Omit<
+  CreateSubscription,
+  "nextBillingDate" | "isFreeTrial"
+> & {
+  isFreeTrial: boolean;
+  nextBillingDate: string;
+};
+
 const AddSubscriptionForm = ({
   setIsOpen,
 }: {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const addSubscriptionMutation = useAddSubscription({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
-  const [subscriptionData, setSubscriptionData] = useState<CreateSubscription>({
-    price: 0.0,
-    title: "",
-    showImage: true,
-    billingCycle: "monthly",
-    category: "other",
-    currency: "pln",
-    isFreeTrial: false,
-    nextBillingDate: null,
-  });
+  const { control, register, handleSubmit, setValue } =
+    useForm<AddSubscriptionFormValues>({
+      defaultValues: {
+        price: 0,
+        title: "",
+        showImage: true,
+        billingCycle: "monthly",
+        category: "other",
+        currency: "pln",
+        isFreeTrial: false,
+        nextBillingDate: "",
+      },
+    });
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-
-    const newValue =
-      e.target instanceof HTMLInputElement && e.target.type === "checkbox"
-        ? e.target.checked
-        : name === "price"
-          ? Number(value)
-          : value;
-
-    setSubscriptionData((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
-  };
-
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    addSubscriptionMutation.mutate(subscriptionData);
-  };
+  const title = useWatch({ control, name: "title" });
+  const showImage = useWatch({ control, name: "showImage" });
+  const isFreeTrial = useWatch({ control, name: "isFreeTrial" });
 
   return (
     <ModalLayout onClick={() => setIsOpen(false)}>
       <div className="flex justify-between ">
         <h2>Dodaj subskrypcję</h2>
-        <button onClick={() => setIsOpen(false)}>X</button>
+        <button type="button" onClick={() => setIsOpen(false)}>
+          X
+        </button>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit((subscriptionData) =>
+          addSubscriptionMutation.mutate(subscriptionData),
+        )}
+      >
         <div className="flex">
           <div className="formField">
             <label htmlFor="title">Nazwa subskrypcji</label>
             <input
               id="title"
-              name="title"
               type="text"
-              value={subscriptionData.title}
-              onChange={handleChange}
+              {...register("title")}
               placeholder="np. Netflix"
               required
             />
           </div>
 
           <AddLogo
-            name={subscriptionData.title}
-            showImage={subscriptionData.showImage}
-            setShowImage={(showImage) =>
-              setSubscriptionData((prev) => ({
-                ...prev,
-                showImage,
-              }))
+            name={title}
+            showImage={showImage}
+            setShowImage={(value) =>
+              setValue("showImage", value, { shouldDirty: true })
             }
           />
         </div>
@@ -88,12 +80,10 @@ const AddSubscriptionForm = ({
           <label htmlFor="price">Cena</label>
           <input
             id="price"
-            name="price"
             type="number"
             min="0.00"
             step="0.01"
-            value={subscriptionData.price.toFixed(2)}
-            onChange={handleChange}
+            {...register("price", { valueAsNumber: true })}
             placeholder="0.00"
             required
           />
@@ -101,12 +91,7 @@ const AddSubscriptionForm = ({
 
         <div className="formField">
           <label htmlFor="currency">Waluta</label>
-          <select
-            id="currency"
-            name="currency"
-            value={subscriptionData.currency}
-            onChange={handleChange}
-          >
+          <select id="currency" {...register("currency")}>
             <option value="pln">PLN</option>
             <option value="usd">USD</option>
           </select>
@@ -114,12 +99,7 @@ const AddSubscriptionForm = ({
 
         <div className="formField">
           <label htmlFor="billingCycle">Cykl rozliczeniowy</label>
-          <select
-            id="billingCycle"
-            name="billingCycle"
-            value={subscriptionData.billingCycle}
-            onChange={handleChange}
-          >
+          <select id="billingCycle" {...register("billingCycle")}>
             <option value="weekly">Tygodniowo</option>
             <option value="monthly">Miesięcznie</option>
             <option value="yearly">Rocznie</option>
@@ -129,13 +109,7 @@ const AddSubscriptionForm = ({
         <div className="formField">
           <label htmlFor="category">Kategoria</label>
 
-          <select
-            id="category"
-            name="category"
-            value={subscriptionData.category}
-            onChange={handleChange}
-            required
-          >
+          <select id="category" {...register("category")} required>
             <option value="entertainment">Entertainment</option>
             <option value="music">Music</option>
             <option value="software">Software</option>
@@ -149,25 +123,21 @@ const AddSubscriptionForm = ({
           <label htmlFor="isFreeTrial">Free Trial</label>
           <input
             id="isFreeTrial"
-            name="isFreeTrial"
             type="checkbox"
-            checked={subscriptionData.isFreeTrial}
-            onChange={handleChange}
+            {...register("isFreeTrial")}
           />
         </div>
 
         <div className="formField">
           <label htmlFor="nextBillingDate">
-            {subscriptionData.isFreeTrial
+            {isFreeTrial
               ? "Koniec okresu próbnego"
               : "Data następnej płatności"}
           </label>
           <input
             id="nextBillingDate"
-            name="nextBillingDate"
             type="date"
-            value={subscriptionData.nextBillingDate?.toString() ?? ""}
-            onChange={handleChange}
+            {...register("nextBillingDate")}
             required
           />
         </div>

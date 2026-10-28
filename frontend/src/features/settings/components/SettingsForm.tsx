@@ -33,13 +33,18 @@ const PreferencesForm = ({ defaultValues }: { defaultValues: FormFields }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="currency">Currency</label>
-        <select {...register("currency")} id="currency">
-          <option value="pln">PLN</option>
-          <option value="usd">USD</option>
-        </select>
-        <button type="submit">submit</button>
+      Profile Preferences Account
+      <form className="flex flex-col border" onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <label htmlFor="currency">Currency</label>
+          <select {...register("currency")} id="currency">
+            <option value="pln">PLN</option>
+            <option value="usd">USD</option>
+          </select>
+        </div>
+        <div className="">
+          <button type="submit">Save</button>
+        </div>
       </form>
     </div>
   );
