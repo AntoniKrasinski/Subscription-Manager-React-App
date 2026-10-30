@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "../../../lib/TanStackConfig/queryKeys";
 import { api } from "../../../lib/apiClient";
+import type { UserPreferences } from "../../../types/api";
 
 export const usePreferences = () => {
   return useQuery({
@@ -11,5 +12,5 @@ export const usePreferences = () => {
 
 const getPreferences = async () => {
   const response = await api.get("/preferences");
-  return response.data.data;
+  return response.data.data as UserPreferences;
 };

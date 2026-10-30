@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { api } from "../../../lib/apiClient";
 import { queryKeys } from "../../../lib/TanStackConfig/queryKeys";
 import type { CreateSubscription } from "../../../types/api";
@@ -14,6 +15,7 @@ export const useAddSubscription = ({
     mutationFn: addSubscription,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.subscriptions });
+      toast.success("Subscription successfully added.")
       onSuccess?.();
     },
   });

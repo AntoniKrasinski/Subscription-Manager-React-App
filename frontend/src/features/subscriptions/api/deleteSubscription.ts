@@ -1,14 +1,18 @@
 import { api } from "../../../lib/apiClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "../../../lib/TanStackConfig/queryKeys";
-
+import toast from "react-hot-toast";
 export const useDeleteSubscription = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: deleteSubscription,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: queryKeys.subscriptions }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.subscriptions })
+      toast.success("Subscription successfullu delated")  
+    
+    }
+      
   });
 };
 

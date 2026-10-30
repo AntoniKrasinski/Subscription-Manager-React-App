@@ -1,3 +1,4 @@
+
 import type { Dispatch, SetStateAction } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import type { Subscription } from "../../../types/api";
@@ -19,7 +20,12 @@ const EditSubscriptionForm = ({
   subscription: Subscription;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const editSubscriptionMutation = useUpdateSubscription();
+  const editSubscriptionMutation = useUpdateSubscription({
+    onSuccess: () => {
+      setIsOpen(false);
+    },
+  });
+
   const { control, register, handleSubmit, setValue } =
     useForm<EditSubscriptionFormValues>({
       defaultValues: {
@@ -40,12 +46,8 @@ const EditSubscriptionForm = ({
 
   return (
     <ModalLayout onClick={() => setIsOpen(false)}>
-      <div className="flex justify-between">
-        <h2>Edytuj subskrypcję</h2>
-
-        <button type="button" onClick={() => setIsOpen(false)}>
-          X
-        </button>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold">Edytuj subskrypcję</h2>
       </div>
 
       <form
@@ -55,96 +57,132 @@ const EditSubscriptionForm = ({
             data: subscriptionData,
           }),
         )}
+        className="flex flex-col gap-6"
       >
-        <div className="flex">
-          <div className="formField">
-            <label htmlFor="title">Nazwa subskrypcji</label>
+        <section className="flex flex-col gap-4">
+          <div className="flex items-end gap-4">
+            <div className="formField flex-1 min-w-0">
+              <label htmlFor="title">Nazwa subskrypcji</label>
+              <input
+                id="title"
+                type="text"
+                {...register("title")}
+                placeholder="np. Netflix"
+                required
+              />
+            </div>
+
+            <AddLogo
+              name={title}
+              showImage={showImage}
+              setShowImage={(value) =>
+                setValue("showImage", value, { shouldDirty: true })
+              }
+            />
+          </div>
+
+          <div className="grid grid-cols-[1fr_120px] gap-3">
+            <div className="formField">
+              <label htmlFor="price">Cena</label>
+              <input
+                id="price"
+                type="number"
+                min="0"
+                step="0.01"
+                {...register("price", { valueAsNumber: true })}
+                placeholder="0.00"
+                required
+              />
+            </div>
+
+            <div className="formField">
+              <label htmlFor="currency">Waluta</label>
+              <select id="currency" {...register("currency")}>
+                <option value="pln">PLN</option>
+                <option value="usd">USD</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="formField">
+              <label htmlFor="billingCycle">Cykl rozliczeniowy</label>
+              <select id="billingCycle" {...register("billingCycle")}>
+                <option value="weekly">Tygodniowo</option>
+                <option value="monthly">Miesięcznie</option>
+                <option value="yearly">Rocznie</option>
+              </select>
+            </div>
+
+            <div className="formField">
+              <label htmlFor="category">Kategoria</label>
+              <select id="category" {...register("category")} required>
+                <option value="entertainment">Entertainment</option>
+                <option value="music">Music</option>
+                <option value="software">Software</option>
+                <option value="education">Education</option>
+                <option value="fitness">Fitness</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <label htmlFor="isFreeTrial" className="font-medium">
+                Free Trial
+              </label>
+              <p className="text-xs text-muted mt-1">
+                Subskrypcja posiada okres próbny
+              </p>
+            </div>
+
             <input
-              id="title"
-              type="text"
-              {...register("title")}
-              placeholder="np. Netflix"
+              id="isFreeTrial"
+              type="checkbox"
+              {...register("isFreeTrial")}
+              className="size-4 accent-primary"
+            />
+          </div>
+
+          <div className="formField">
+            <label htmlFor="nextBillingDate">
+              {isFreeTrial
+                ? "Koniec okresu próbnego"
+                : "Data następnej płatności"}
+            </label>
+            <input
+              id="nextBillingDate"
+              type="date"
+              {...register("nextBillingDate")}
               required
             />
           </div>
-          <AddLogo
-            name={title}
-            showImage={showImage}
-            setShowImage={(value) =>
-              setValue("showImage", value, { shouldDirty: true })
-            }
-          />
+        </section>
+
+        <div className="flex justify-end gap-3 border-t border-border pt-5">
+          <button
+            className="cancelButton"
+            type="button"
+            onClick={() => setIsOpen(false)}
+          >
+            Anuluj
+          </button>
+
+          <button
+            type="submit"
+            disabled={editSubscriptionMutation.isPending}
+            className="bigButton"
+          >
+            {editSubscriptionMutation.isPending
+              ? "Zapisywanie..."
+              : "Zapisz zmiany"}
+          </button>
         </div>
-
-        <div className="formField">
-          <label htmlFor="price">Cena</label>
-
-          <input
-            id="price"
-            type="number"
-            min="0"
-            step="0.01"
-            {...register("price", { valueAsNumber: true })}
-            placeholder="0.00"
-            required
-          />
-        </div>
-
-        <div className="formField">
-          <label htmlFor="currency">Waluta</label>
-
-          <select id="currency" {...register("currency")}>
-            <option value="pln">PLN</option>
-            <option value="usd">USD</option>
-          </select>
-        </div>
-
-        <div className="formField">
-          <label htmlFor="billingCycle">Cykl rozliczeniowy</label>
-
-          <select id="billingCycle" {...register("billingCycle")}>
-            <option value="weekly">Tygodniowo</option>
-            <option value="monthly">Miesięcznie</option>
-            <option value="yearly">Rocznie</option>
-          </select>
-        </div>
-
-        <div className="formField">
-          <label htmlFor="category">Kategoria</label>
-
-          <input
-            id="category"
-            type="text"
-            {...register("category")}
-            placeholder="np. Rozrywka"
-            required
-          />
-        </div>
-
-        <div className="formFieldChckbox">
-          <label htmlFor="isFreeTrial">Free Trial</label>
-
-          <input id="isFreeTrial" type="checkbox" {...register("isFreeTrial")} />
-        </div>
-
-        <div className="formField">
-          <label htmlFor="nextBillingDate">
-            {isFreeTrial ? "Koniec darmowego okresu" : "Następna płatność"}
-          </label>
-
-          <input
-            id="nextBillingDate"
-            type="date"
-            {...register("nextBillingDate")}
-            required
-          />
-        </div>
-
-        <button type="submit" disabled={editSubscriptionMutation.isPending}>
-          {editSubscriptionMutation.isPending
-            ? "Zapisywanie..."
-            : "Zapisz zmiany"}
-        </button>
       </form>
     </ModalLayout>
   );

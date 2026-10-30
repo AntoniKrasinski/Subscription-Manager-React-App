@@ -56,7 +56,12 @@ export interface UpdateSubscription {
 }
 
 export interface UserPreferences {
-  s: string;
+  currency: Currency;
+  language: string;
+  monthlyBudget: number;
+  reminders: boolean;
+  theme: string;
+  timezone: string;
 }
 
 export interface SubscriptionsStats {

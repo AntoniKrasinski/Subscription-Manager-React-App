@@ -22,7 +22,14 @@ export const getPreferences = async (req: Request, res: Response) => {
   if (!preferences) {
     return res.status(404).json({ error: "User preferences not found." });
   }
-  res.status(200).json({ status: "success", data: preferences });
+  const { currency, language, monthlyBudget, reminders, theme, timezone } =
+    preferences;
+  res
+    .status(200)
+    .json({
+      status: "success",
+      data: { currency, language, monthlyBudget, reminders, theme, timezone },
+    });
 };
 
 export const editPreferences = async (req: Request, res: Response) => {

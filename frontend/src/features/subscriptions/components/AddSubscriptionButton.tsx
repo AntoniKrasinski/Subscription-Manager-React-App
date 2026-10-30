@@ -6,7 +6,7 @@ const AddSubscriptionButton = () => {
     <>
       {isOpen && <AddSubscriptionForm setIsOpen={setIsOpen} />}
       <button
-        className="font-semibold cursor-pointer  rounded-xl border-0 bg-primary px-5 py-3 text-white"
+        className="bigButton"
         onClick={() => {
           setIsOpen(true);
         }}

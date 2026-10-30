@@ -206,17 +206,85 @@ td {
 .formField {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-.formFieldChckbox {
+.formFieldCheckbox {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-input {
-  padding: 8px;
+.formField label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.formField p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
   border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(59 79 224 / 12%);
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 18px;
+  height: 18px;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.bigButton {
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 0;
+  background-color: var(--color-primary);
+  padding: 12px 20px;
+  color: white;
+}
+
+.cancelButton {
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: #f1f3f7;
+  padding: 12px 20px;
+  color: var(--text-muted);
 }
 
 /* a:focus-visible,
