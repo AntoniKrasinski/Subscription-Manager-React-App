@@ -2,6 +2,7 @@ import { db } from "../prisma/db.ts";
 import { type Request, type Response } from "express";
 import { Char } from "@prisma/orm-postgres/target/codec-types";
 import axios from "axios";
+import { currencyExchange } from "../utils/currencyExchange.ts";
 
 interface SubscriptionParams {
   id: Char<36>;
@@ -47,6 +48,90 @@ export const addSubscription = async (req: Request, res: Response) => {
         isFreeTrial,
         nextBillingDate,
       },
+    },
+  });
+};
+
+type SortBy = "price" | "name" | "nextPayment" | "billingCycle";
+type SortOrder = "asc" | "desc";
+
+export const getSortedSubscriptions = async (req: Request, res: Response) => {
+  const { id: userId } = req.user;
+
+  const sortBy = req.query.sortBy as SortBy;
+  const sortOrder = req.query.sortOrder as SortOrder;
+
+  const userSubscriptions = await db.orm.public.Subscription.where({
+    userId,
+  }).all();
+
+  let subscriptions = userSubscriptions;
+
+  switch (sortBy) {
+    case "price": {
+      const convertedSubscriptions = await currencyExchange(
+        userSubscriptions,
+        userId,
+      );
+
+      const convertedPrices = new Map(
+        convertedSubscriptions.map((subscription) => [
+          subscription.id,
+          subscription.price,
+        ]),
+      );
+
+      subscriptions = [...userSubscriptions].sort((a, b) => {
+        const priceA = convertedPrices.get(a.id) ?? a.price;
+        const priceB = convertedPrices.get(b.id) ?? b.price;
+
+        return sortOrder === "desc" ? priceB - priceA : priceA - priceB;
+      });
+
+      break;
+    }
+
+    case "name": {
+      subscriptions = [...subscriptions].sort((a, b) =>
+        sortOrder === "desc"
+          ? b.title.localeCompare(a.title)
+          : a.title.localeCompare(b.title),
+      );
+      break;
+    }
+
+    case "nextPayment": {
+      subscriptions = [...subscriptions].sort((a, b) => {
+        const comparison =
+          new Date(a.nextBillingDate).getTime() -
+          new Date(b.nextBillingDate).getTime();
+
+        return sortOrder === "desc" ? -comparison : comparison;
+      });
+      break;
+    }
+
+    case "billingCycle": {
+      const cycleOrder = {
+        weekly: 1,
+        monthly: 2,
+        yearly: 3,
+      };
+
+      subscriptions = [...subscriptions].sort((a, b) => {
+        const comparison =
+          cycleOrder[a.billingCycle] - cycleOrder[b.billingCycle];
+
+        return sortOrder === "desc" ? -comparison : comparison;
+      });
+      break;
+    }
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      subscriptions,
     },
   });
 };

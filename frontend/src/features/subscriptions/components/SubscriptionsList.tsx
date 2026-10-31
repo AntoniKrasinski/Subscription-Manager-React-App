@@ -1,27 +1,40 @@
 import React from "react";
-import { useGetAllSubscriptions } from "../api/getSubscriptions";
 import { useDeleteSubscription } from "../api/deleteSubscription";
 import EditSubscriptionButton from "./EditSubscriptionButton";
 import { getDaysUntil } from "../../../utils/getDaysUntl";
 import ShowLogo from "./ShowLogo";
 import { ChevronsUpDown } from "lucide-react";
+import type { SortBy, SortOrder } from "../../../types/api";
+import { useGetSortedSubscriptions } from "../api/getSortedSubscriptions";
 
 const SubscriptionsList = () => {
+  const deleteMutation = useDeleteSubscription();
+
+  const columns = [
+    { label: "Name", value: "name" },
+    { label: "Category", value: null },
+    { label: "Price", value: "price" },
+    { label: "Billing cycle", value: "billingCycle" },
+    { label: "Next payment", value: "nextPayment" },
+  ] as const;
+
+  const [sortBy, setSortBy] = React.useState<SortBy>("name");
+  const [sortOrder, setSortOrder] = React.useState<SortOrder>("asc");
+
   const {
     data: userSubscriptions,
     isLoading,
     isError,
-  } = useGetAllSubscriptions();
+  } = useGetSortedSubscriptions(sortBy, sortOrder);
 
-  const deleteMutation = useDeleteSubscription();
-
-  const columns = [
-    "Name",
-    "Category",
-    "Price",
-    "Billing cycle",
-    "Next payment",
-  ];
+  const handleSort = (column: SortBy) => {
+    if (sortBy === column) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
 
   if (isLoading) {
     return <div>loading...</div>;
@@ -40,16 +53,30 @@ const SubscriptionsList = () => {
             <thead>
               <tr>
                 {columns.map((column) => (
-                  <th key={column} className="px-3 pb-3 text-left">
-                    <button
-                      type="button"
-                      className="sort-button inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0"
-                    >
-                      {column}
-                      <ChevronsUpDown size={12} />
-                    </button>
+                  <th key={column.label} className="px-3 pb-3 text-left">
+                    {column.value ? (
+                      <button
+                        type="button"
+                        onClick={() => handleSort(column.value)}
+                        className="inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0"
+                      >
+                        {column.label}
+
+                        <ChevronsUpDown
+                          size={sortBy === column.value ? 16 : 14}
+                          className={
+                            sortBy === column.value
+                              ? "text-primary"
+                              : "text-black"
+                          }
+                        />
+                      </button>
+                    ) : (
+                      column.label
+                    )}
                   </th>
                 ))}
+
                 <th className="px-3 pb-3 text-left">Status</th>
                 <th className="px-3 pb-3">
                   <span className="sr-only">Actions</span>

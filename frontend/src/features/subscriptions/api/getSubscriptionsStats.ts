@@ -12,6 +12,5 @@ export const useGetSubscriptionsStats = () => {
 
 const getSubscriptionStats = async (): Promise<SubscriptionsStats> => {
   const response = await api.get("/stats/subscriptions");
-  console.log(response);
   return response.data.data;
 };

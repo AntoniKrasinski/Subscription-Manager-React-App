@@ -8,6 +8,10 @@ export interface AuthResponse {
   user: User;
 }
 
+export type SortBy = "price" | "name" | "nextPayment" | "billingCycle";
+export type SortOrder = "asc" | "desc";
+
+
 type BillingCycle = "weekly" | "monthly" | "yearly";
 type Currency = "pln" | "usd";
 export type SubscriptionCategory =

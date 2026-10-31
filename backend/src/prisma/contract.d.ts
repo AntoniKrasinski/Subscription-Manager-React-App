@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'99663ef0cdbb3ee2aafdbdaaeb93632cbc0d0f29125b429526bc2ba827ce62c3'>;
+  StorageHashBase<'34710ccfcf0a7ca93a0d0e32e045447c8ad248d6f1c0cd02df4fab2010bab8f3'>;
 export type ExecutionHash =
   ExecutionHashBase<'ec16d72bbe697cfe4effb11316cd1112ce14e58e70681c51a3be4db129c65a00'>;
 export type ProfileHash =
@@ -265,7 +265,7 @@ export type FieldOutputTypes = {
       readonly title: CodecTypes['pg/text@1']['output'];
       readonly showImage: CodecTypes['pg/bool@1']['output'];
       readonly category: CodecTypes['pg/text@1']['output'];
-      readonly billingCycle: CodecTypes['pg/text@1']['output'];
+      readonly billingCycle: 'weekly' | 'monthly' | 'yearly';
       readonly isFreeTrial: CodecTypes['pg/bool@1']['output'];
       readonly nextBillingDate: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly currency: CodecTypes['pg/text@1']['output'];
@@ -329,7 +329,7 @@ export type FieldInputTypes = {
       readonly title: CodecTypes['pg/text@1']['input'];
       readonly showImage: CodecTypes['pg/bool@1']['input'];
       readonly category: CodecTypes['pg/text@1']['input'];
-      readonly billingCycle: CodecTypes['pg/text@1']['input'];
+      readonly billingCycle: 'weekly' | 'monthly' | 'yearly';
       readonly isFreeTrial: CodecTypes['pg/bool@1']['input'];
       readonly nextBillingDate: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly currency: CodecTypes['pg/text@1']['input'];
@@ -387,7 +387,7 @@ export type StorageColumnTypes = {
       readonly userId: Char<36>;
     };
     readonly subscription: {
-      readonly billingCycle: CodecTypes['pg/text@1']['output'];
+      readonly billingCycle: 'weekly' | 'monthly' | 'yearly';
       readonly category: CodecTypes['pg/text@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly currency: CodecTypes['pg/text@1']['output'];
@@ -451,7 +451,7 @@ export type StorageColumnInputTypes = {
       readonly userId: CodecTypes['sql/char@1']['input'];
     };
     readonly subscription: {
-      readonly billingCycle: CodecTypes['pg/text@1']['input'];
+      readonly billingCycle: 'weekly' | 'monthly' | 'yearly';
       readonly category: CodecTypes['pg/text@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly currency: CodecTypes['pg/text@1']['input'];
@@ -524,7 +524,7 @@ export namespace Models {
     title: CodecTypes['pg/text@1']['output'];
     showImage: CodecTypes['pg/bool@1']['output'];
     category: CodecTypes['pg/text@1']['output'];
-    billingCycle: CodecTypes['pg/text@1']['output'];
+    billingCycle: 'weekly' | 'monthly' | 'yearly';
     isFreeTrial: CodecTypes['pg/bool@1']['output'];
     nextBillingDate: CodecTypes['pg/timestamptz-string@1']['output'];
     currency: CodecTypes['pg/text@1']['output'];
@@ -957,6 +957,12 @@ type ContractBase = Omit<
               uniques: readonly [{ readonly columns: readonly ['userId'] }];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+          };
+          readonly valueSet: {
+            readonly BillingCycle: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['weekly', 'monthly', 'yearly'];
             };
           };
         };
@@ -1413,6 +1419,16 @@ type ContractBase = Omit<
                 readonly userId: { readonly column: 'userId' };
               };
             };
+          };
+        };
+        readonly enum: {
+          readonly BillingCycle: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'weekly'; readonly value: 'weekly' },
+              { readonly name: 'monthly'; readonly value: 'monthly' },
+              { readonly name: 'yearly'; readonly value: 'yearly' },
+            ];
           };
         };
       };

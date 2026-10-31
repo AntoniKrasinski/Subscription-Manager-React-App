@@ -1,71 +1,73 @@
 // use prisma-8
 //  `npx prisma contract emit`.
-
 model User {
-  id           Char(36)           @id(map: "User_pkey") @default(uuid())
-  createdAt    TimestamptzString  @default(now())
-  email        String             @unique(map: "User_email_key")
+  id           Char(36)          @id(map: "User_pkey") @default(uuid())
+  createdAt    TimestamptzString @default(now())
+  email        String            @unique(map: "User_email_key")
   name         String
-  updatedAt    TimestamptzString  @default(now())
+  updatedAt    TimestamptzString @default(now())
   passwordHash String
 }
 
 model RefreshToken {
-  id        Char(36)            @id(map: "RefreshToken_pkey") @default(uuid())
-  createdAt TimestamptzString   @default(now())
+  id        Char(36)           @id(map: "RefreshToken_pkey") @default(uuid())
+  createdAt TimestamptzString  @default(now())
   expiresAt TimestamptzString
   revokedAt TimestamptzString?
-  tokenHash String              @unique(map: "RefreshToken_tokenHash_key")
-  updatedAt TimestamptzString   @default(now())
+  tokenHash String             @unique(map: "RefreshToken_tokenHash_key")
+  updatedAt TimestamptzString  @default(now())
   userId    Char(36)
 }
 
+enum BillingCycle {
+  weekly
+  monthly
+  yearly
+}
+
 model Subscription {
-  id                   Char(36)                @id(map: "Subscription_pkey") @default(uuid())
+  id                   Char(36)               @id(map: "Subscription_pkey") @default(uuid())
   userId               Char(36)
   price                Float
   title                String
   showImage            Boolean
   category             String
-  billingCycle         String
-  isFreeTrial          Boolean                 @default(false)
+  billingCycle         BillingCycle
+  isFreeTrial          Boolean                @default(false)
   nextBillingDate      TimestamptzString
   currency             String
-  isActive             Boolean                 @default(true)
-  createdAt            TimestamptzString       @default(now())
-  updatedAt            TimestamptzString       @default(now())
+  isActive             Boolean                @default(true)
+  createdAt            TimestamptzString      @default(now())
+  updatedAt            TimestamptzString      @default(now())
 
   subscriptionsHistory SubscriptionsHistory[]
-
 
   @@check(expression: "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "Subscription_currency_check_f9dd20e4")
 }
 
 model SubscriptionsHistory {
-  id             Char(36)           @id(map: "SubscriptionsHistory_pkey") @default(uuid())
+  id             Char(36)          @id(map: "SubscriptionsHistory_pkey") @default(uuid())
   price          Float
   currency       String
   billingDate    TimestamptzString
-  createdAt      TimestamptzString  @default(now())
-  updatedAt      TimestamptzString  @default(now())
+  createdAt      TimestamptzString @default(now())
+  updatedAt      TimestamptzString @default(now())
 
   subscriptionId Char(36)
-  subscription   Subscription      @relation(fields: [subscriptionId], references: [id])
+  subscription   Subscription      @relation(fields:[subscriptionId], references:[id])
 }
 
-
-
 model UserPreferences {
-  id            Char(36)           @id(map: "UserPreferences_pkey") @default(uuid())
-  createdAt     TimestamptzString  @default(now())
+  id            Char(36)          @id(map: "UserPreferences_pkey") @default(uuid())
+  createdAt     TimestamptzString @default(now())
   currency      String
-  language      String             @default("en")
+  language      String            @default("en")
   monthlyBudget Float?
   reminders     Boolean
-  theme         String             @default("light")
+  theme         String            @default("light")
   timezone      String
-  updatedAt     TimestamptzString  @default(now())
-  userId        Char(36)           @unique
+  updatedAt     TimestamptzString @default(now())
+  userId        Char(36)          @unique
 
   @@check(expression: "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))", map: "UserPreferences_currency_check_f9dd20e4")
   @@check(expression: "(language = ANY (ARRAY['pl'::text, 'en'::text]))", map: "UserPreferences_language_check_a3491bd7")
@@ -73,10 +75,9 @@ model UserPreferences {
 }
 
 model CurrencyExchanges {
-  id            Char(36)           @id(map: "CurrencyExchanges_pkey") @default(uuid())
+  id            Char(36)          @id(map: "CurrencyExchanges_pkey") @default(uuid())
   currency      String
   rate          Float
   effectiveDate TimestamptzString
-  createdAt     TimestamptzString  @default(now())
+  createdAt     TimestamptzString @default(now())
 }
-

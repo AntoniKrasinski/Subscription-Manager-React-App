@@ -32,6 +32,25 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "BillingCycle": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "weekly",
+                "value": "weekly"
+              },
+              {
+                "name": "monthly",
+                "value": "monthly"
+              },
+              {
+                "name": "yearly",
+                "value": "yearly"
+              }
+            ]
+          }
+        },
         "models": {
           "CurrencyExchanges": {
             "fields": {
@@ -191,6 +210,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "BillingCycle",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "category": {
@@ -770,13 +795,24 @@
                 {
                   "expression": "(currency = ANY (ARRAY['pln'::text, 'usd'::text]))",
                   "name": "Subscription_currency_check_f9dd20e4"
+                },
+                {
+                  "expression": "\"billingCycle\" IN ('weekly', 'monthly', 'yearly')",
+                  "name": "subscription_billingCycle_check_e3140f33",
+                  "prefix": "subscription_billingCycle_check"
                 }
               ],
               "columns": {
                 "billingCycle": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "BillingCycle",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "category": {
                   "codecId": "pg/text@1",
@@ -1125,13 +1161,23 @@
                 }
               ]
             }
+          },
+          "valueSet": {
+            "BillingCycle": {
+              "kind": "valueSet",
+              "values": [
+                "weekly",
+                "monthly",
+                "yearly"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "99663ef0cdbb3ee2aafdbdaaeb93632cbc0d0f29125b429526bc2ba827ce62c3"
+    "storageHash": "34710ccfcf0a7ca93a0d0e32e045447c8ad248d6f1c0cd02df4fab2010bab8f3"
   },
   "execution": {
     "executionHash": "ec16d72bbe697cfe4effb11316cd1112ce14e58e70681c51a3be4db129c65a00",
