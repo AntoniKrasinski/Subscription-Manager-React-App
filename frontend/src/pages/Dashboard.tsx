@@ -8,11 +8,15 @@ import { useGetSubscriptionsStats } from "../features/subscriptions/api/getSubsc
 import { usePreferences } from "../features/settings/api/GetPreferences.ts";
 import Skeleton from "../components/UI/Skeleton.tsx";
 import Error from "../components/UI/Error.tsx";
+import UpcomingPaymentsList from "../features/subscriptions/components/UpcomingPaymentsList.tsx";
+import { useNavigate } from "react-router";
 
 const Dashboard = () => {
   const user = useUser();
   const preferences = usePreferences();
   const stats = useGetSubscriptionsStats();
+
+  const navigation = useNavigate();
 
   return (
     <ProtectedRoute>
@@ -63,12 +67,21 @@ const Dashboard = () => {
                 <TrendingUp size={18} />
               </SmallCard>
             </div>
-            <div className="grid grid-cols-12 h-full gap-6">
+            <div className="grid grid-cols-12 gap-6">
               <Card
                 title="Upcoming payments"
-                action="View all"
+                action={
+                  <button
+                    className="bigButton"
+                    onClick={() => navigation("/subscriptions")}
+                  >
+                    View All
+                  </button>
+                }
                 className="col-span-7 row-span-full"
-              ></Card>
+              >
+                <UpcomingPaymentsList />
+              </Card>
               <Card
                 title="Spending by categories"
                 className=" col-span-5 row-span-full"

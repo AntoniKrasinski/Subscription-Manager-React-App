@@ -12,9 +12,12 @@ const Subscriptions = () => {
           <div className="">
             <h1>Subscriptions</h1>
             <p>Add and edit your subscriptions</p>
-          </div> <AddSubscriptionButton />
+          </div>
+          <AddSubscriptionButton />
         </div>
-        <SubscriptionsList />
+        <div className="flex min-h-0 flex-1 flex-col">
+          <SubscriptionsList />
+        </div>
       </AppLayout>
     </ProtectedRoute>
   );

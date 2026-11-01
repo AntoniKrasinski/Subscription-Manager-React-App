@@ -122,3 +122,17 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
     },
   });
 };
+
+export const getCategoriesStats = (req: Request, res: Response) => {
+  const { user } = req;
+  const userSubscriptions = db.orm.public.Subscription.where({
+    userId: user.id,
+  }).all();
+
+  
+
+  res.status(200).json({
+    status: "success",
+    data: {},
+  });
+};

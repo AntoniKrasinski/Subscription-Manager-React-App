@@ -14,9 +14,12 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
         <LogOutButton />
       </aside>
-      <div className="flex flex-col w-6/7 h-full">
-        <Header />
-        <main className="mx-auto w-full max-w-[1440px] p-8 space-y-8">
+      <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col">
+        <div className="shrink-0">
+          <Header />
+        </div>
+
+        <main className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col space-y-8 overflow-y-auto overflow-x-hidden p-8">
           {children}
         </main>
       </div>

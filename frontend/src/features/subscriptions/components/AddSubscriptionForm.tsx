@@ -35,7 +35,7 @@ const AddSubscriptionForm = ({
         showImage: true,
         billingCycle: "monthly",
         category: "other",
-        currency: userPreferences.data!.currency,
+        currency: userPreferences.data?.currency,
         isFreeTrial: false,
         nextBillingDate: "",
       },
