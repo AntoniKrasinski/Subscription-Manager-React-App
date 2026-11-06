@@ -19,7 +19,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
           <Header />
         </div>
 
-        <main className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col space-y-8 overflow-y-auto overflow-x-hidden p-8">
+        <main className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col space-y-8 overflow-x-hidden overflow-y-hidden p-8">
           {children}
         </main>
       </div>

@@ -123,16 +123,74 @@ export const getSubscriptionsStats = async (req: Request, res: Response) => {
   });
 };
 
-export const getCategoriesStats = (req: Request, res: Response) => {
+export const getCategoriesStats = async (req: Request, res: Response) => {
   const { user } = req;
-  const userSubscriptions = db.orm.public.Subscription.where({
+  const userSubscriptions = await db.orm.public.Subscription.where({
     userId: user.id,
   }).all();
 
-  
+  const activeSubscriptions = userSubscriptions.filter(
+    (e) => e.isActive && !e.isFreeTrial,
+  );
+
+  const subscriptionsWithUserCurrency = await currencyExchange(
+    activeSubscriptions,
+    user.id,
+  );
+
+  const subscriptionCategoriesStats = subscriptionsWithUserCurrency.reduce(
+    (acc, subscription) => {
+      const { category, price, billingCycle } = subscription;
+
+      if (!acc[category]) {
+        acc[category] = {
+          monthlySpending: 0,
+          yearlySpending: 0,
+        };
+      }
+
+      let monthlyPrice = 0;
+      let yearlyPrice = 0;
+
+      switch (billingCycle) {
+        case "monthly":
+          monthlyPrice = price;
+          yearlyPrice = price * 12;
+          break;
+
+        case "yearly":
+          monthlyPrice = price / 12;
+          yearlyPrice = price;
+          break;
+
+        case "weekly":
+          monthlyPrice = price * (52 / 12);
+          yearlyPrice = price * 52;
+          break;
+      }
+
+      acc[category].monthlySpending += monthlyPrice;
+      acc[category].yearlySpending += yearlyPrice;
+
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        monthlySpending: number;
+        yearlySpending: number;
+      }
+    >,
+  );
+
+  Object.values(subscriptionCategoriesStats).forEach((category) => {
+    category.monthlySpending = Math.round(category.monthlySpending * 100) / 100;
+
+    category.yearlySpending = Math.round(category.yearlySpending * 100) / 100;
+  });
 
   res.status(200).json({
     status: "success",
-    data: {},
+    data: { subscriptionCategoriesStats },
   });
 };

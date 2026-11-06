@@ -10,6 +10,7 @@ import Skeleton from "../components/UI/Skeleton.tsx";
 import Error from "../components/UI/Error.tsx";
 import UpcomingPaymentsList from "../features/subscriptions/components/UpcomingPaymentsList.tsx";
 import { useNavigate } from "react-router";
+import CardChartSpendingByCategirues from "../features/subscriptions/components/ChartSpendingByCategirues.tsx";
 
 const Dashboard = () => {
   const user = useUser();
@@ -67,7 +68,7 @@ const Dashboard = () => {
                 <TrendingUp size={18} />
               </SmallCard>
             </div>
-            <div className="grid grid-cols-12 gap-6">
+            <div className="grid grid-cols-12 gap-6 min-h-0 ">
               <Card
                 title="Upcoming payments"
                 action={
@@ -82,13 +83,9 @@ const Dashboard = () => {
               >
                 <UpcomingPaymentsList />
               </Card>
-              <Card
-                title="Spending by categories"
-                className=" col-span-5 row-span-full"
-              >
-                {" "}
-                Add subscription first
-              </Card>
+
+              <CardChartSpendingByCategirues />
+
             </div>
           </>
         ) : (

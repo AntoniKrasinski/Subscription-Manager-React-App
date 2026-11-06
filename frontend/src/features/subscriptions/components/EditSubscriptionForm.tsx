@@ -1,10 +1,10 @@
-
 import type { Dispatch, SetStateAction } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import type { Subscription } from "../../../types/api";
 import { useUpdateSubscription } from "../api/updateSubscription";
 import ModalLayout from "../../../components/layouts/ModalLayout";
 import AddLogo from "./AddLogo";
+import { subscriptionCategories } from "../../../lib/subscriptionCategories";
 
 type EditSubscriptionFormValues = Omit<
   Subscription,
@@ -119,12 +119,14 @@ const EditSubscriptionForm = ({
             <div className="formField">
               <label htmlFor="category">Kategoria</label>
               <select id="category" {...register("category")} required>
-                <option value="entertainment">Entertainment</option>
-                <option value="music">Music</option>
-                <option value="software">Software</option>
-                <option value="education">Education</option>
-                <option value="fitness">Fitness</option>
-                <option value="other">Other</option>
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {Object.keys(subscriptionCategories).map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

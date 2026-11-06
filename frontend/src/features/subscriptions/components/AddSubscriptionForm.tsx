@@ -5,6 +5,7 @@ import { useAddSubscription } from "../api/addSubscription";
 import ModalLayout from "../../../components/layouts/ModalLayout";
 import AddLogo from "./AddLogo";
 import { usePreferences } from "../../settings/api/GetPreferences";
+import { subscriptionCategories } from "../../../lib/subscriptionCategories";
 
 type AddSubscriptionFormValues = Omit<
   CreateSubscription,
@@ -34,7 +35,7 @@ const AddSubscriptionForm = ({
         title: "",
         showImage: true,
         billingCycle: "monthly",
-        category: "other",
+        category: "Other",
         currency: userPreferences.data?.currency,
         isFreeTrial: false,
         nextBillingDate: "",
@@ -117,12 +118,14 @@ const AddSubscriptionForm = ({
             <div className="formField">
               <label htmlFor="category">Kategoria</label>
               <select id="category" {...register("category")} required>
-                <option value="entertainment">Entertainment</option>
-                <option value="music">Music</option>
-                <option value="software">Software</option>
-                <option value="education">Education</option>
-                <option value="fitness">Fitness</option>
-                <option value="other">Other</option>
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {Object.keys(subscriptionCategories).map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

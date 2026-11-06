@@ -17,7 +17,7 @@ const UpcomingPaymentsList = () => {
       {subscriptions.length === 0 ? (
         "No upcoming payments"
       ) : (
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto min-h-0 max-h-[clamp(200px,40vh,600px)]">
           <table className="w-full border-separate border-spacing-y-6 ">
             <thead>
               <tr>

@@ -11,16 +11,19 @@ export interface AuthResponse {
 export type SortBy = "price" | "name" | "nextPayment" | "billingCycle";
 export type SortOrder = "asc" | "desc";
 
-
 type BillingCycle = "weekly" | "monthly" | "yearly";
 type Currency = "pln" | "usd";
+
 export type SubscriptionCategory =
-  | "entertainment"
-  | "music"
-  | "software"
-  | "education"
-  | "fitness"
-  | "other";
+  | "Entertainment"
+  | "Software"
+  | "Gaming"
+  | "Productivity"
+  | "Education"
+  | "Health & Fitness"
+  | "Lifestyle"
+  | "Finance"
+  | "Other";
 
 export interface Subscription {
   id: string;
@@ -73,4 +76,14 @@ export interface SubscriptionsStats {
   thisMonthSpending: string;
   monthlySpending: string;
   yearlySpending: string;
+}
+
+export interface SubscriptionsCategoriesStats {
+  subscriptionCategoriesStats: Record<
+    string,
+    {
+      monthlySpending: number;
+      yearlySpending: number;
+    }
+  >;
 }
