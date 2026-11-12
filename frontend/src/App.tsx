@@ -12,6 +12,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "react-hot-toast";
 import { mutationConfig } from "./lib/TanStackConfig/mutatuonCacheConfig";
 import { queriesConfig } from "./lib/TanStackConfig/queriesConfig";
+import { ConfirmModalProvider } from "./context/ConfirmModalProvider";
 
 const queryClient = new QueryClient({
   mutationCache: mutationConfig,
@@ -59,8 +60,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <Toaster />
+      <ConfirmModalProvider>
+        <RouterProvider router={router} />
+        <Toaster />
+      </ConfirmModalProvider>
     </QueryClientProvider>
   );
 }

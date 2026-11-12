@@ -6,8 +6,10 @@ import ShowLogo from "./ShowLogo";
 import { ChevronsUpDown } from "lucide-react";
 import type { SortBy, SortOrder } from "../../../types/api";
 import { useGetSortedSubscriptions } from "../api/getSortedSubscriptions";
+import { useConfirmModal } from "../../../hooks/useConfirmModal";
 
 const SubscriptionsList = () => {
+  const { confirmModal } = useConfirmModal();
   const deleteMutation = useDeleteSubscription();
 
   const columns = [
@@ -121,7 +123,10 @@ const SubscriptionsList = () => {
                         <button
                           type="button"
                           onClick={() =>
-                            deleteMutation.mutate(subscription.id as string)
+                            confirmModal(() =>
+                              deleteMutation.mutate(subscription.id as string),
+                          `Are you sure to delete subscirpiotn "${subscription.title}"?`
+                            )
                           }
                           className="min-h-9 cursor-pointer rounded-xl border-0 bg-danger-soft px-4 py-2 text-danger"
                         >
