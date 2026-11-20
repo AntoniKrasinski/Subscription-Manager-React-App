@@ -3,27 +3,43 @@ import axios from "axios";
 import { db } from "../prisma/db";
 import type { Char } from "@prisma/orm-postgres/target/codec-types";
 
+interface NbpExchangeRateResponse {
+  table: "A" | "B" | "C";
+  currency: string;
+  code: string;
+  rates: NbpExchangeRate[];
+}
+
+interface NbpExchangeRate {
+  no: string;
+  effectiveDate: string;
+  mid: number;
+}
+
 const getExchangeRate = async (currency: string) => {
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  // Store currency data to reduce dependency on third-party APIs.
   const cachedCurrency = await db.orm.public.CurrencyExchanges.where({
     currency,
-    effectiveDate: today.toISOString(),
-  }).first();
-  if (cachedCurrency) {
-    return cachedCurrency.rate;
-  }
-  const response = await axios.get(
+  })
+    .orderBy((p) => p.effectiveDate.desc())
+    .first();
+
+  const response = await axios.get<NbpExchangeRateResponse>(
     `https://api.nbp.pl/api/exchangerates/rates/a/${currency}/`,
   );
 
-  let { mid: rate, effectiveDate } = response.data.rates[0];
-  effectiveDate = new Date(effectiveDate);
-  await db.orm.public.CurrencyExchanges.create({
-    currency,
-    effectiveDate,
-    rate,
-  });
+  const { mid: rate, effectiveDate } = response.data.rates[0];
+
+  if (effectiveDate !== cachedCurrency?.effectiveDate) {
+    await db.orm.public.CurrencyExchanges.create({
+      currency,
+      effectiveDate,
+      rate,
+    });
+  } else if (cachedCurrency) {
+    return cachedCurrency.rate;
+  }
+
   return rate;
 };
 
