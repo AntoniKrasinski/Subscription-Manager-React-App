@@ -17,6 +17,7 @@ interface NbpExchangeRate {
 }
 
 const getExchangeRate = async (currency: string) => {
+  const today = new Date();
   // Store currency data to reduce dependency on third-party APIs.
   const cachedCurrency = await db.orm.public.CurrencyExchanges.where({
     currency,
@@ -24,21 +25,24 @@ const getExchangeRate = async (currency: string) => {
     .orderBy((p) => p.effectiveDate.desc())
     .first();
 
+  if (
+    cachedCurrency?.createdAt &&
+    new Date(cachedCurrency.createdAt).toDateString() === today.toDateString() // This ensures each currency is updated at most once per day.
+  ) {
+    return cachedCurrency.rate;
+  }
+
   const response = await axios.get<NbpExchangeRateResponse>(
     `https://api.nbp.pl/api/exchangerates/rates/a/${currency}/`,
   );
 
   const { mid: rate, effectiveDate } = response.data.rates[0];
 
-  if (effectiveDate !== cachedCurrency?.effectiveDate) {
-    await db.orm.public.CurrencyExchanges.create({
-      currency,
-      effectiveDate,
-      rate,
-    });
-  } else if (cachedCurrency) {
-    return cachedCurrency.rate;
-  }
+  await db.orm.public.CurrencyExchanges.create({
+    currency,
+    effectiveDate,
+    rate,
+  });
 
   return rate;
 };
