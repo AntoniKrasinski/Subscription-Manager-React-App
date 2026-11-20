@@ -21,12 +21,12 @@ const SmallCard = ({
 }: SmallCardProps) => {
   return (
     <div
-      className={`w-full rounded-2xl border border-border bg-surface p-5 text-left ${className}`}
+      className={`small-card w-full rounded-2xl border border-border bg-surface p-3 text-left sm:p-4 xl:p-5 ${className}`}
     >
-      <div className="flex items-center gap-3">
+      <div className="small-card-header flex items-center gap-2 sm:gap-3">
         {children && (
           <span
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${iconClassName}`}
+            className={`small-card-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-lg sm:h-9 sm:w-9 sm:rounded-xl xl:h-10 xl:w-10 ${iconClassName}`}
           >
             {children}
           </span>
@@ -34,12 +34,12 @@ const SmallCard = ({
         <h3>{title}</h3>
       </div>
 
-      <div className="mt-2.5 flex flex-col gap-1">
-        <p className="stat-value">
+      <div className="mt-2 flex flex-col gap-1 sm:mt-2.5">
+        <p className="small-card-value stat-value">
           {data}
           {unit && <span className="unit ml-1.5">{unit}</span>}
         </p>
-        <p className="small">{subTitle}</p>
+        <p className="small small-card-subtitle">{subTitle}</p>
       </div>
     </div>
   );

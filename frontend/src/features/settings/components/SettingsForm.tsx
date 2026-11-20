@@ -1,4 +1,3 @@
-import React from "react";
 import { useEditPreferences } from "../api/EditPreferences";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { usePreferences } from "../api/GetPreferences";
@@ -32,12 +31,12 @@ const PreferencesForm = ({ defaultValues }: { defaultValues: FormFields }) => {
   };
 
   return (
-    <div className="flex flex-col gap-8 rounded-xl border border-border bg-surface p-8">
+    <div className="flex flex-col gap-8 rounded-xl border border-border bg-surface p-4 sm:p-6 lg:p-8">
       <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
         <section className="flex flex-col gap-6">
           <h2 className="text-lg font-semibold text-text">Preferences</h2>
 
-          <div className="flex items-center justify-between gap-6 border-b border-border pb-5">
+          <div className="flex flex-col items-start justify-between gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:gap-6">
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="currency"
@@ -53,7 +52,7 @@ const PreferencesForm = ({ defaultValues }: { defaultValues: FormFields }) => {
             </select>
           </div>
 
-          <div className="flex items-center justify-between gap-6 border-b border-border pb-5">
+          <div className="flex flex-col items-start justify-between gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:gap-6">
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="timezone"

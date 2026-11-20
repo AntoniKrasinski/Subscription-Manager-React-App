@@ -13,12 +13,12 @@ const UpcomingPaymentsList = () => {
   if (isLoading) return <div>Loading...</div>;
   if (isError || !subscriptions) return <Error />;
   return (
-    <div className="flex flex-col justify-center p-8 bg-surface border border-border rounded-xl">
+    <div className="flex flex-col justify-center rounded-xl border border-border bg-surface p-3 sm:p-5 lg:p-8">
       {subscriptions.length === 0 ? (
         "No upcoming payments"
       ) : (
-        <div className="overflow-y-auto min-h-0 max-h-[clamp(200px,40vh,600px)]">
-          <table className="w-full border-separate border-spacing-y-6 ">
+        <div className="min-h-0 max-h-[clamp(200px,40vh,600px)] overflow-auto">
+          <table className="w-full min-w-[440px] border-separate border-spacing-y-4 sm:border-spacing-y-6">
             <thead>
               <tr>
                 <th className="px-3 pb-3 text-left">Name</th>

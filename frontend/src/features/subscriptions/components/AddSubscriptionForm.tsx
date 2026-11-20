@@ -165,7 +165,7 @@ const AddSubscriptionForm = ({
           </div>
         </section>
 
-        <div className="flex justify-end gap-3 border-t border-border pt-5">
+        <div className="flex flex-col-reverse justify-end gap-3 border-t border-border pt-5 sm:flex-row">
           <button
             className="cancelButton"
             type="button"

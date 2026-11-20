@@ -31,7 +31,7 @@ const Dashboard = () => {
               <p>Take control of your subscriptions with SubRiver</p>
             </div>
 
-            <div className="grid grid-cols-4 grid-rows-1 gap-6">
+            <div className="grid grid-cols-2 gap-3 md:gap-6 xl:grid-cols-4">
               <SmallCard
                 title="Total Subscriptions"
                 data={stats.data.activeSubscriptionsCount}
@@ -68,7 +68,7 @@ const Dashboard = () => {
                 <TrendingUp size={18} />
               </SmallCard>
             </div>
-            <div className="grid grid-cols-12 gap-6 min-h-0 ">
+            <div className="grid min-h-0 grid-cols-1 gap-4 lg:grid-cols-12 md:gap-6">
               <Card
                 title="Upcoming payments"
                 action={
@@ -79,7 +79,7 @@ const Dashboard = () => {
                     View All
                   </button>
                 }
-                className="col-span-7 row-span-full"
+                className="lg:col-span-7 lg:row-span-full"
               >
                 <UpcomingPaymentsList />
               </Card>

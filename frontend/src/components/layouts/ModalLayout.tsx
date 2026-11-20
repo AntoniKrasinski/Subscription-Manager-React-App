@@ -10,10 +10,10 @@ const ModalLayout = ({
   return (
     <div
       onClick={onClick}
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm "
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/20 p-3 backdrop-blur-sm sm:p-6"
     >
       <div
-        className="border border-border rounded-xl bg-active-bg p-8 w-1/3 bg-surface"
+        className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl overflow-y-auto rounded-xl border border-border bg-surface p-4 shadow-xl sm:max-h-[calc(100dvh-3rem)] sm:p-6 lg:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         {children}

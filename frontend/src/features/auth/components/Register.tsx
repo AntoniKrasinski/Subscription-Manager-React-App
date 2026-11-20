@@ -19,10 +19,11 @@ const Register = () => {
   });
 
   return (
-    <div>
+    <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-8">
+      <h1 className="mb-6">Create an account</h1>
       <form
         onSubmit={handleSubmit((userData) => registerMutation.mutate(userData))}
-        className="flex flex-col"
+        className="flex flex-col gap-3"
       >
         <label htmlFor="name">Name</label>
         <input
@@ -45,11 +46,13 @@ const Register = () => {
           {...register("password")}
           required
         />
-        <button className="border" type="submit">
-          Submit
+        <button className="bigButton mt-3" type="submit" disabled={registerMutation.isPending}>
+          {registerMutation.isPending ? "Creating account..." : "Register"}
         </button>
       </form>
-      <Link to="/login">Login</Link>
+      <p className="mt-5 text-center">
+        Already have an account? <Link className="text-primary" to="/login">Sign in</Link>
+      </p>
     </div>
   );
 };

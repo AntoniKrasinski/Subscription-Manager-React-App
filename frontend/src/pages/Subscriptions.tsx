@@ -1,4 +1,3 @@
-import React from "react";
 import ProtectedRoute from "../components/layouts/ProtectedRoute";
 import AppLayout from "../components/layouts/AppLayout";
 import SubscriptionsList from "../features/subscriptions/components/SubscriptionsList";
@@ -8,7 +7,7 @@ const Subscriptions = () => {
   return (
     <ProtectedRoute>
       <AppLayout>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
           <div className="">
             <h1>Subscriptions</h1>
             <p>Add and edit your subscriptions</p>

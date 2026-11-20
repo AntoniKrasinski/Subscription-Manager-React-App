@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PieChart, Pie, ResponsiveContainer, Tooltip } from "recharts";
 import { subscriptionCategories } from "../../../lib/subscriptionCategories";
 import Toggle from "../../../components/common/Toogle";
@@ -36,7 +36,7 @@ const CardChartSpendingByCategirues = () => {
   return (
     <Card
       title="Spending by categories"
-      className=" col-span-5 row-span-full"
+      className="lg:col-span-5 lg:row-span-full"
       action={
         <Toggle
           options={["Mo", "Yr"]}
@@ -62,8 +62,8 @@ const CardChartSpendingByCategirues = () => {
           .length ? (
         <></>
       ) : (
-        <div className="flex min-h-0 flex- items-center gap-6 w-full">
-          <div className="w-1/2 h-64">
+        <div className="flex min-h-0 w-full flex-col items-center gap-4 sm:flex-row sm:gap-6">
+          <div className="h-56 w-full max-w-sm sm:h-64 sm:w-1/2">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart key={chartKey}>
                 <Pie
@@ -89,7 +89,7 @@ const CardChartSpendingByCategirues = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="flex flex-col gap-4 flex-1">
+          <div className="flex w-full flex-1 flex-col gap-3 sm:gap-4">
             {data
               .sort((a, b) => b.value - a.value)
               .map((item) => (

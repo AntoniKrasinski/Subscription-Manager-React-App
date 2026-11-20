@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router";
 import {
   LayoutDashboard,
@@ -31,24 +30,27 @@ const navLinks: { name: string; to: string; icon: LucideIcon }[] = [
   },
 ];
 
-const linkBase = "flex items-center gap-2.5 rounded-xl px-3.5 py-3";
+const linkBase =
+  "flex min-w-0 items-center gap-2.5 rounded-xl px-1.5 py-2 whitespace-nowrap md:px-3.5 md:py-3";
 
 const Navigation = () => {
   return (
-    <nav className="w-full flex justify-center">
-      <ul className="w-[80%] justify-center flex flex-col gap-1">
+    <nav className="flex w-full justify-center">
+      <ul className="flex w-full justify-around gap-1 md:w-full md:flex-col md:justify-center">
         {navLinks.map(({ name, to, icon: Icon }) => (
-          <li key={to}>
+          <li key={to} className="min-w-0 flex-1 md:flex-none">
             <NavLink
               to={to}
               className={({ isActive }) =>
                 isActive
-                  ? `${linkBase} bg-primary-soft font-bold text-primary-strong`
-                  : `${linkBase} text-text-muted`
+                  ? `${linkBase} flex-col bg-primary-soft font-bold text-primary-strong md:flex-row`
+                  : `${linkBase} flex-col text-text-muted md:flex-row`
               }
             >
-              <Icon size={18} />
-              {name}
+              <Icon size={20} className="shrink-0" />
+              <span className="min-w-0 truncate text-[10px] leading-4 md:text-sm md:leading-normal">
+                {name}
+              </span>
             </NavLink>
           </li>
         ))}

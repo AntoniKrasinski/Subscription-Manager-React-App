@@ -16,10 +16,11 @@ const Login = () => {
   const logining = useLogin({ onSuccess: () => navigate("/dashboard") });
 
   return (
-    <div>
+    <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-8">
+      <h1 className="mb-6">Sign in</h1>
       <form
         onSubmit={handleSubmit((userData) => logining.mutate(userData))}
-        className="flex flex-col"
+        className="flex flex-col gap-3"
       >
         <label htmlFor="email">Email</label>
         <input
@@ -35,9 +36,13 @@ const Login = () => {
           {...register("password")}
           required
         />
-        <button type="submit">Submit</button>
+        <button className="bigButton mt-3" type="submit" disabled={logining.isPending}>
+          {logining.isPending ? "Signing in..." : "Sign in"}
+        </button>
       </form>
-      <Link to={"/register"}>Register</Link>
+      <p className="mt-5 text-center">
+        No account? <Link className="text-primary" to="/register">Register</Link>
+      </p>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useDeleteSubscription } from "../api/deleteSubscription";
 import EditSubscriptionButton from "./EditSubscriptionButton";
 import { getDaysUntil } from "../../../utils/getDaysUntl";
 import ShowLogo from "./ShowLogo";
-import { ChevronsUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
 import type { SortBy, SortOrder } from "../../../types/api";
 import { useGetSortedSubscriptions } from "../api/getSortedSubscriptions";
 import { useConfirmModal } from "../../../hooks/useConfirmModal";
@@ -38,6 +38,20 @@ const SubscriptionsList = () => {
     }
   };
 
+  const handleDelete = (id: string, title: string) => {
+    confirmModal(
+      () => deleteMutation.mutate(id),
+      `Are you sure to delete subscription "${title}"?`,
+    );
+  };
+
+  const sortOptions: { label: string; value: SortBy }[] = [
+    { label: "Name", value: "name" },
+    { label: "Price", value: "price" },
+    { label: "Billing cycle", value: "billingCycle" },
+    { label: "Next payment", value: "nextPayment" },
+  ];
+
   if (isLoading) {
     return <div>loading...</div>;
   }
@@ -47,12 +61,105 @@ const SubscriptionsList = () => {
 
   return (
     <>
-      <div className="flex  min-h-0 flex-col justify-center p-8  bg-surface border border-border rounded-xl">
+      <div className="flex min-h-0 flex-col justify-center rounded-xl border border-border bg-surface p-3 sm:p-5 lg:p-8">
         {userSubscriptions.length === 0 ? (
           "add first subscription"
         ) : (
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            <table className="w-full border-separate border-spacing-y-6">
+          <>
+            <div className="mb-3 flex items-center justify-between gap-3 md:hidden">
+              <label className="flex min-w-0 flex-1 items-center gap-2 text-sm text-text-muted">
+                Sort by
+                <select
+                  className="min-w-0 flex-1"
+                  value={sortBy}
+                  onChange={(event) => {
+                    const option = sortOptions.find(
+                      ({ value }) => value === event.target.value,
+                    );
+                    if (option) {
+                      setSortBy(option.value);
+                      setSortOrder("asc");
+                    }
+                  }}
+                >
+                  {sortOptions.map(({ label, value }) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                onClick={() =>
+                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+                }
+                aria-label={`Sort ${sortOrder === "asc" ? "descending" : "ascending"}`}
+                className="flex h-10 shrink-0 items-center gap-1 rounded-lg border border-border bg-surface px-3 text-sm text-text-muted"
+              >
+                {sortOrder === "asc" ? (
+                  <ArrowUp size={16} />
+                ) : (
+                  <ArrowDown size={16} />
+                )}
+                {sortOrder === "asc" ? "Asc" : "Desc"}
+              </button>
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-auto md:hidden">
+              {userSubscriptions.map((subscription) => (
+                <article
+                  key={subscription.id}
+                  className="min-w-0 rounded-xl border border-border bg-bg p-3"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+                      <ShowLogo
+                        name={subscription.title}
+                        showImage={subscription.showImage}
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h2 className="mb-0 truncate text-base">
+                        {subscription.title}
+                      </h2>
+                      <p className="break-words font-semibold">
+                        {subscription.price} {subscription.currency}
+                        <span className="ml-1 font-normal text-text-muted">
+                          / {subscription.billingCycle}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
+                    <span className="rounded-xl bg-primary-soft px-2 py-1 text-xs text-primary-strong">
+                      {subscription.category}
+                    </span>
+                    <span className="text-sm text-text-muted">
+                      {getDaysUntil(subscription.nextBillingDate)}
+                    </span>
+                    <span className="rounded-xl bg-success-soft px-2 py-1 text-xs text-success">
+                      Active
+                    </span>
+                  </div>
+
+                  <div className="mt-3 flex gap-2 border-t border-border pt-3">
+                    <EditSubscriptionButton subscription={subscription} />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDelete(subscription.id, subscription.title)
+                      }
+                      className="min-h-10 flex-1 cursor-pointer rounded-xl border-0 bg-danger-soft px-3 py-2 text-sm text-danger"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <div className="hidden min-h-0 flex-1 overflow-auto md:block">
+            <table className="w-full min-w-[760px] border-separate border-spacing-y-4 sm:border-spacing-y-6">
               <thead>
                 <tr>
                   {columns.map((column) => (
@@ -123,10 +230,7 @@ const SubscriptionsList = () => {
                         <button
                           type="button"
                           onClick={() =>
-                            confirmModal(() =>
-                              deleteMutation.mutate(subscription.id as string),
-                          `Are you sure to delete subscirpiotn "${subscription.title}"?`
-                            )
+                            handleDelete(subscription.id, subscription.title)
                           }
                           className="min-h-9 cursor-pointer rounded-xl border-0 bg-danger-soft px-4 py-2 text-danger"
                         >
@@ -138,7 +242,8 @@ const SubscriptionsList = () => {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </>
         )}
       </div>
     </>
