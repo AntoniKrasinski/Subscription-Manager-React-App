@@ -46,7 +46,7 @@ const PreferencesForm = ({ defaultValues }: { defaultValues: FormFields }) => {
               </label>
             </div>
 
-            <select {...register("currency")} id="currency">
+            <select className="md:max-w-fit" {...register("currency")} id="currency">
               <option value="pln">PLN (zł)</option>
               <option value="usd">USD ($)</option>
             </select>
@@ -62,7 +62,7 @@ const PreferencesForm = ({ defaultValues }: { defaultValues: FormFields }) => {
               </label>
             </div>
 
-            <select id="timezone">
+            <select id="timezone" className="md:max-w-fit">
               <option value="Europe/Warsaw">Europe/Warsaw</option>
               <option value="Europe/London">Europe/London</option>
               <option value="Europe/Berlin">Europe/Berlin</option>
